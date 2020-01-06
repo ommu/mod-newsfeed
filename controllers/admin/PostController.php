@@ -9,7 +9,6 @@
  * TOC :
  *	Index
  *	Manage
- *	Create
  *	Update
  *	View
  *	Delete
@@ -90,40 +89,6 @@ class PostController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
-		]);
-	}
-
-	/**
-	 * Creates a new Newsfeeds model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 * @return mixed
-	 */
-	public function actionCreate()
-	{
-		$model = new Newsfeeds();
-
-		if(Yii::$app->request->isPost) {
-			$model->load(Yii::$app->request->post());
-			// $postData = Yii::$app->request->post();
-			// $model->load($postData);
-			// $model->order = $postData['order'] ? $postData['order'] : 0;
-
-			if($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed success created.'));
-				return $this->redirect(['manage']);
-				//return $this->redirect(['view', 'id'=>$model->id]);
-
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
-			}
-		}
-
-		$this->view->title = Yii::t('app', 'Create Newsfeed');
-		$this->view->description = '';
-		$this->view->keywords = '';
-		return $this->render('admin_create', [
-			'model' => $model,
 		]);
 	}
 
