@@ -16,6 +16,7 @@
  * @property string $app
  * @property integer $member_id
  * @property integer $user_id
+ * @property integer $privacy
  * @property string $newsfeed_type
  * @property string $newsfeed_post
  * @property string $newsfeed_param
@@ -32,6 +33,7 @@
  * @property NewsfeedComment[] $comments
  * @property NewsfeedLike[] $likes
  * @property NewsfeedMention[] $mentions
+ * @property NewsfeedSpecific[] $specifics
  * @property Members $member
  * @property Users $user
  * @property Users $creation
@@ -53,7 +55,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname'];
 
 	public $memberDisplayname;
 	public $userDisplayname;
@@ -76,7 +78,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 	{
 		return [
 			[['publish', 'app', 'member_id', 'user_id', 'newsfeed_type', 'newsfeed_param'], 'required'],
-			[['publish', 'member_id', 'user_id', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
+			[['publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
 			[['newsfeed_type', 'newsfeed_post'], 'string'],
 			//[['newsfeed_param'], 'json'],
 			[['app'], 'string', 'max' => 32],
@@ -94,6 +96,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'app' => Yii::t('app', 'App'),
 			'member_id' => Yii::t('app', 'Member'),
 			'user_id' => Yii::t('app', 'User'),
+			'privacy' => Yii::t('app', 'Privacy'),
 			'newsfeed_type' => Yii::t('app', 'Newsfeed Type'),
 			'newsfeed_post' => Yii::t('app', 'Newsfeed Post'),
 			'newsfeed_param' => Yii::t('app', 'Newsfeed Param'),
@@ -108,6 +111,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'comments' => Yii::t('app', 'Comments'),
 			'likes' => Yii::t('app', 'Likes'),
 			'mentions' => Yii::t('app', 'Mentions'),
+			'specifics' => Yii::t('app', 'Specifics'),
 			'memberDisplayname' => Yii::t('app', 'Member'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
@@ -178,6 +182,22 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$mentions = $model->count();
 
 		return $mentions ? $mentions : 0;
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getSpecifics($count=false)
+	{
+		if($count == false)
+			return $this->hasMany(NewsfeedSpecific::className(), ['newsfeed_id' => 'id']);
+
+		$model = NewsfeedSpecific::find()
+			->alias('t')
+			->where(['newsfeed_id' => $this->id]);
+		$specifics = $model->count();
+
+		return $specifics ? $specifics : 0;
 	}
 
 	/**
@@ -373,6 +393,24 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'raw',
+		];
+		$this->templateColumns['specifics'] = [
+			'attribute' => 'specifics',
+			'value' => function($model, $key, $index, $column) {
+				$specifics = $model->getSpecifics(true);
+				return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics]), 'data-pjax'=>0]);
+			},
+			'filter' => false,
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'raw',
+		];
+		$this->templateColumns['privacy'] = [
+			'attribute' => 'privacy',
+			'value' => function($model, $key, $index, $column) {
+				return $this->filterYesNo($model->privacy);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
