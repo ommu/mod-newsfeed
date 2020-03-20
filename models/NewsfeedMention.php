@@ -11,7 +11,6 @@
  * This is the model class for table "ommu_newsfeed_mention".
  *
  * The followings are the available columns in table "ommu_newsfeed_mention":
- * @property integer $id
  * @property integer $newsfeed_id
  * @property string $mentions
  * @property string $creation_date
@@ -57,6 +56,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			[['newsfeed_id', 'mentions'], 'required'],
 			[['newsfeed_id', 'creation_id', 'modified_id'], 'integer'],
 			//[['mentions'], 'json'],
+			[['newsfeed_id'], 'unique'],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];
 	}
@@ -67,7 +67,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => Yii::t('app', 'ID'),
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
 			'mentions' => Yii::t('app', 'Mentions'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
@@ -128,8 +127,8 @@ class NewsfeedMention extends \app\components\ActiveRecord
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
-			'class' => 'yii\grid\SerialColumn',
-			'contentOptions' => ['class'=>'center'],
+			'class' => 'app\components\grid\SerialColumn',
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['newsfeedId'] = [
 			'attribute' => 'newsfeedId',
@@ -188,7 +187,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
 				$model->select($column);
 			else
 				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
+			$model = $model->where(['newsfeed_id' => $id])->one();
 			return is_array($column) ? $model : $model->$column;
 			
 		} else {

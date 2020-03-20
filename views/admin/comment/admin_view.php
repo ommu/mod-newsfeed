@@ -32,17 +32,6 @@ $this->params['menu']['content'] = [
 <?php
 $attributes = [
 	[
-		'attribute' => 'id',
-		'value' => $model->id ? $model->id : '-',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
-		'format' => 'raw',
-		'visible' => !$small,
-	],
-	[
 		'attribute' => 'newsfeedId',
 		'value' => function ($model) {
 			$newsfeedId = isset($model->newsfeed) ? $model->newsfeed->id : '-';
@@ -53,13 +42,14 @@ $attributes = [
 		'format' => 'html',
 	],
 	[
-		'attribute' => 'memberDisplayname',
-		'value' => isset($model->member) ? $model->member->displayname : '-',
+		'attribute' => 'userDisplayname',
+		'value' => isset($model->user) ? $model->user->displayname : '-',
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'userDisplayname',
-		'value' => isset($model->user) ? $model->user->displayname : '-',
+		'attribute' => 'publish',
+		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'format' => 'raw',
 		'visible' => !$small,
 	],
 	[
@@ -85,15 +75,6 @@ $attributes = [
 	[
 		'attribute' => 'updatedDisplayname',
 		'value' => isset($model->updated) ? $model->updated->displayname : '-',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'histories',
-		'value' => function ($model) {
-			$histories = $model->getHistories(true);
-			return Html::a($histories, ['history/manage', 'comment'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} histories', ['count'=>$histories])]);
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[

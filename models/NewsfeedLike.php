@@ -11,11 +11,10 @@
  * This is the model class for table "ommu_newsfeed_like".
  *
  * The followings are the available columns in table "ommu_newsfeed_like":
- * @property integer $id
- * @property integer $publish
  * @property integer $newsfeed_id
- * @property integer $member_id
  * @property integer $user_id
+ * @property integer $publish
+ * @property integer $like_react
  * @property string $likes_date
  * @property string $likes_ip
  * @property string $updated_date
@@ -23,8 +22,6 @@
  *
  * The followings are the available model relations:
  * @property Newsfeeds $newsfeed
- * @property NewsfeedLikeHistory[] $histories
- * @property Members $member
  * @property Users $user
  * @property Users $updated
  *
@@ -33,10 +30,8 @@
 namespace app\modules\newsfeed\models;
 
 use Yii;
-use yii\helpers\Html;
 use yii\helpers\Url;
 use ommu\users\models\Users;
-use ommu\member\models\Members;
 
 class NewsfeedLike extends \app\components\ActiveRecord
 {
@@ -45,7 +40,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	public $gridForbiddenColumn = [];
 
 	public $newsfeedId;
-	public $memberDisplayname;
 	public $userDisplayname;
 	public $updatedDisplayname;
 
@@ -63,8 +57,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'member_id', 'user_id', 'likes_ip'], 'required'],
-			[['publish', 'newsfeed_id', 'member_id', 'user_id', 'updated_id'], 'integer'],
+			[['newsfeed_id', 'user_id', 'likes_ip'], 'required'],
+			[['newsfeed_id', 'user_id', 'publish', 'like_react', 'updated_id'], 'integer'],
 			[['likes_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];
@@ -76,18 +70,15 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'id' => Yii::t('app', 'ID'),
-			'publish' => Yii::t('app', 'Publish'),
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
-			'member_id' => Yii::t('app', 'Member'),
 			'user_id' => Yii::t('app', 'User'),
+			'publish' => Yii::t('app', 'Publish'),
+			'like_react' => Yii::t('app', 'Like React'),
 			'likes_date' => Yii::t('app', 'Likes Date'),
 			'likes_ip' => Yii::t('app', 'Likes Ip'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'updated_id' => Yii::t('app', 'Updated'),
-			'histories' => Yii::t('app', 'Histories'),
 			'newsfeedId' => Yii::t('app', 'Newsfeed'),
-			'memberDisplayname' => Yii::t('app', 'Member'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'updatedDisplayname' => Yii::t('app', 'Updated'),
 		];
@@ -99,30 +90,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	public function getNewsfeed()
 	{
 		return $this->hasOne(Newsfeeds::className(), ['id' => 'newsfeed_id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getHistories($count=false)
-	{
-		if($count == false)
-			return $this->hasMany(NewsfeedLikeHistory::className(), ['like_id' => 'id']);
-
-		$model = NewsfeedLikeHistory::find()
-			->alias('t')
-			->where(['like_id' => $this->id]);
-		$histories = $model->count();
-
-		return $histories ? $histories : 0;
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getMember()
-	{
-		return $this->hasOne(Members::className(), ['member_id' => 'member_id']);
 	}
 
 	/**
@@ -165,8 +132,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
-			'class' => 'yii\grid\SerialColumn',
-			'contentOptions' => ['class'=>'center'],
+			'class' => 'app\components\grid\SerialColumn',
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['newsfeedId'] = [
 			'attribute' => 'newsfeedId',
@@ -175,14 +142,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				// return $model->newsfeedId;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
-		];
-		$this->templateColumns['memberDisplayname'] = [
-			'attribute' => 'memberDisplayname',
-			'value' => function($model, $key, $index, $column) {
-				return isset($model->member) ? $model->member->displayname : '-';
-				// return $model->memberDisplayname;
-			},
-			'visible' => !Yii::$app->request->get('member') ? true : false,
 		];
 		$this->templateColumns['userDisplayname'] = [
 			'attribute' => 'userDisplayname',
@@ -220,15 +179,13 @@ class NewsfeedLike extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('updated') ? true : false,
 		];
-		$this->templateColumns['histories'] = [
-			'attribute' => 'histories',
+		$this->templateColumns['like_react'] = [
+			'attribute' => 'like_react',
 			'value' => function($model, $key, $index, $column) {
-				$histories = $model->getHistories(true);
-				return Html::a($histories, ['history/manage', 'like'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} histories', ['count'=>$histories]), 'data-pjax'=>0]);
+				return $this->filterYesNo($model->like_react);
 			},
-			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
-			'format' => 'raw',
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
@@ -237,7 +194,7 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -254,7 +211,7 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				$model->select($column);
 			else
 				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
+			$model = $model->where(['newsfeed_id' => $id])->one();
 			return is_array($column) ? $model : $model->$column;
 			
 		} else {
@@ -271,7 +228,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 		parent::afterFind();
 
 		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
-		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->updatedDisplayname = isset($this->updated) ? $this->updated->displayname : '-';
 	}

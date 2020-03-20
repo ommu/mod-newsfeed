@@ -18,6 +18,7 @@
  *
  * The followings are the available model relations:
  * @property Newsfeeds $newsfeed
+ * @property Users $user
  *
  */
 
@@ -33,6 +34,7 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	public $gridForbiddenColumn = [];
 
 	public $newsfeedId;
+	public $userDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -67,6 +69,7 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 			'except' => Yii::t('app', 'Except'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'newsfeedId' => Yii::t('app', 'Newsfeed'),
+			'userDisplayname' => Yii::t('app', 'User'),
 		];
 	}
 
@@ -76,6 +79,14 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	public function getNewsfeed()
 	{
 		return $this->hasOne(Newsfeeds::className(), ['id' => 'newsfeed_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getUser()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'user_id']);
 	}
 
 	/**
@@ -102,8 +113,24 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
-			'class' => 'yii\grid\SerialColumn',
-			'contentOptions' => ['class'=>'center'],
+			'class' => 'app\components\grid\SerialColumn',
+			'contentOptions' => ['class'=>'text-center'],
+		];
+		$this->templateColumns['newsfeedId'] = [
+			'attribute' => 'newsfeedId',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
+				// return $model->newsfeedId;
+			},
+			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
+		];
+		$this->templateColumns['userDisplayname'] = [
+			'attribute' => 'userDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->user) ? $model->user->displayname : '-';
+				// return $model->userDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('user') ? true : false,
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -118,7 +145,7 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 				return $this->filterYesNo($model->except);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 		];
 	}
 

@@ -59,6 +59,9 @@ use yii\widgets\ActiveForm;
 
 		<?php echo $form->field($model, 'updatedDisplayname');?>
 
+		<?php echo $form->field($model, 'privacy')
+			->dropDownList($model::getPrivacy(), ['prompt'=>'']);?>
+
 		<?php echo $form->field($model, 'publish')
 			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
 

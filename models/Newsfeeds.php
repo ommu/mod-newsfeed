@@ -55,7 +55,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname'];
+	public $gridForbiddenColumn = ['privacy', 'app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
 
 	public $memberDisplayname;
 	public $userDisplayname;
@@ -77,7 +77,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publish', 'app', 'member_id', 'user_id', 'newsfeed_type', 'newsfeed_param'], 'required'],
+			[['publish', 'app', 'member_id', 'user_id', 'privacy', 'newsfeed_type', 'newsfeed_post', 'newsfeed_param'], 'required'],
 			[['publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
 			[['newsfeed_type', 'newsfeed_post'], 'string'],
 			//[['newsfeed_param'], 'json'],
@@ -264,8 +264,8 @@ class Newsfeeds extends \app\components\ActiveRecord
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
-			'class' => 'yii\grid\SerialColumn',
-			'contentOptions' => ['class'=>'center'],
+			'class' => 'app\components\grid\SerialColumn',
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['app'] = [
 			'attribute' => 'app',
@@ -371,7 +371,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return Html::a($comments, ['comment/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} comments', ['count'=>$comments]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['likes'] = [
@@ -381,7 +381,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return Html::a($likes, ['like/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} likes', ['count'=>$likes]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['mentions'] = [
@@ -391,7 +391,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['specifics'] = [
@@ -401,16 +401,18 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['privacy'] = [
 			'attribute' => 'privacy',
 			'value' => function($model, $key, $index, $column) {
-				return $this->filterYesNo($model->privacy);
+				if(!$model->privacy)
+					return '-';
+				return $model::getPrivacy($model->privacy);
 			},
-			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'filter' => self::getPrivacy(),
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
@@ -419,7 +421,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'center'],
+			'contentOptions' => ['class'=>'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -443,6 +445,27 @@ class Newsfeeds extends \app\components\ActiveRecord
 			$model = self::findOne($id);
 			return $model;
 		}
+	}
+
+	/**
+	 * function getPrivacy
+	 */
+	public static function getPrivacy($value=null)
+	{
+		$items = array(
+			1 => Yii::t('app', 'Everyone'),
+			2 => Yii::t('app', 'All Registered Users'),
+			5 => Yii::t('app', 'Only My Friends'),
+			3 => Yii::t('app', 'Friends Except'),
+			4 => Yii::t('app', 'Specific Friends'),
+			6 => Yii::t('app', 'Only Me'),
+			7 => Yii::t('app', 'Custom'),
+		);
+
+		if($value !== null)
+			return $items[$value];
+		else
+			return $items;
 	}
 
 	/**
