@@ -5,11 +5,11 @@
  * @var $this app\modules\newsfeed\controllers\admin\LikeController
  * @var $model app\modules\newsfeed\models\NewsfeedLike
  *
- * @author Putra Sudaryanto <putra@ommu.co>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2020 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:31 WIB
- * @link https://www.ommu.co
+ * @link https://github.com/ommu/mod-newsfeed
  *
  */
 

@@ -2,11 +2,11 @@
 /**
  * NewsfeedSpecific
  * 
- * @author Putra Sudaryanto <putra@ommu.co>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2020 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 7 January 2020, 19:05 WIB
- * @link https://www.ommu.co
+ * @link https://github.com/ommu/mod-newsfeed
  *
  * This is the model class for table "ommu_newsfeed_specific".
  *
