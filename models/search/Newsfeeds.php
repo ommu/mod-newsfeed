@@ -8,6 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:28 WIB
+ * @modified date 20 March 2020, 16:20 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -27,7 +28,7 @@ class Newsfeeds extends NewsfeedsModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'member_id', 'user_id', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
+			[['id', 'publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
 			[['app', 'newsfeed_type', 'newsfeed_post', 'newsfeed_param', 'creation_date', 'modified_date', 'updated_date', 'memberDisplayname', 'userDisplayname', 'creationDisplayname', 'modifiedDisplayname', 'updatedDisplayname'], 'safe'],
 		];
 	}
@@ -134,6 +135,7 @@ class Newsfeeds extends NewsfeedsModel
 			't.id' => $this->id,
 			't.member_id' => isset($params['member']) ? $params['member'] : $this->member_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
+			't.privacy' => $this->privacy,
 			't.likes' => $this->likes,
 			't.comments' => $this->comments,
 			'cast(t.creation_date as date)' => $this->creation_date,

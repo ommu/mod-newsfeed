@@ -79,7 +79,11 @@ $attributes = [
 	],
 	[
 		'attribute' => 'newsfeed_param',
-		'value' => Json::encode($model->newsfeed_param),
+		'value' => function ($model) {
+			if(is_array($model->newsfeed_param) && empty($model->newsfeed_param))
+				return '-';
+			return Json::encode($model->newsfeed_param);
+		},
 		'visible' => !$small,
 	],
 	[

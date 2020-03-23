@@ -6,38 +6,45 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 5 January 2020, 23:14 WIB
+ * @modified date 19 March 2020, 14:23 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  * This is the model class for table "ommu_newsfeed_mention".
  *
  * The followings are the available columns in table "ommu_newsfeed_mention":
  * @property integer $newsfeed_id
- * @property string $mentions
+ * @property integer $publish
+ * @property integer $member_id
+ * @property integer $user_id
  * @property string $creation_date
  * @property integer $creation_id
- * @property string $modified_date
- * @property integer $modified_id
+ * @property string $updated_date
  *
  * The followings are the available model relations:
  * @property Newsfeeds $newsfeed
+ * @property Members $member
+ * @property Users $user
  * @property Users $creation
- * @property Users $modified
  *
  */
 
 namespace app\modules\newsfeed\models;
 
 use Yii;
+use yii\helpers\Url;
 use yii\helpers\Json;
 use ommu\users\models\Users;
+use ommu\member\models\Members;
 
 class NewsfeedMention extends \app\components\ActiveRecord
 {
+	use \ommu\traits\UtilityTrait;
+
 	public $gridForbiddenColumn = [];
 
-	public $newsfeedId;
+	public $memberDisplayname;
+	public $userDisplayname;
 	public $creationDisplayname;
-	public $modifiedDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -53,10 +60,9 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'mentions'], 'required'],
-			[['newsfeed_id', 'creation_id', 'modified_id'], 'integer'],
-			//[['mentions'], 'json'],
-			[['newsfeed_id'], 'unique'],
+			[['newsfeed_id'], 'required'],
+			[['newsfeed_id', 'publish', 'member_id', 'user_id', 'creation_id'], 'integer'],
+			[['member_id', 'user_id'], 'safe'],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];
 	}
@@ -68,14 +74,15 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	{
 		return [
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
-			'mentions' => Yii::t('app', 'Mentions'),
+			'publish' => Yii::t('app', 'Publish'),
+			'member_id' => Yii::t('app', 'Member'),
+			'user_id' => Yii::t('app', 'User'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
-			'modified_date' => Yii::t('app', 'Modified Date'),
-			'modified_id' => Yii::t('app', 'Modified'),
-			'newsfeedId' => Yii::t('app', 'Newsfeed'),
+			'updated_date' => Yii::t('app', 'Updated Date'),
+			'memberDisplayname' => Yii::t('app', 'Member'),
+			'userDisplayname' => Yii::t('app', 'User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
-			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
 
@@ -90,17 +97,25 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getCreation()
+	public function getMember()
 	{
-		return $this->hasOne(Users::className(), ['user_id' => 'creation_id']);
+		return $this->hasOne(Members::className(), ['member_id' => 'member_id']);
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getModified()
+	public function getUser()
 	{
-		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
+		return $this->hasOne(Users::className(), ['user_id' => 'user_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getCreation()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'creation_id']);
 	}
 
 	/**
@@ -130,19 +145,28 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class'=>'text-center'],
 		];
-		$this->templateColumns['newsfeedId'] = [
-			'attribute' => 'newsfeedId',
+		$this->templateColumns['newsfeed_id'] = [
+			'attribute' => 'newsfeed_id',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
-				// return $model->newsfeedId;
+				return $model->newsfeed_id;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
 		];
-		$this->templateColumns['mentions'] = [
-			'attribute' => 'mentions',
+		$this->templateColumns['memberDisplayname'] = [
+			'attribute' => 'memberDisplayname',
 			'value' => function($model, $key, $index, $column) {
-				return Json::encode($model->mentions);
+				return isset($model->member) ? $model->member->displayname : '-';
+				// return $model->memberDisplayname;
 			},
+			'visible' => !Yii::$app->request->get('member') ? true : false,
+		];
+		$this->templateColumns['userDisplayname'] = [
+			'attribute' => 'userDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->user) ? $model->user->displayname : '-';
+				// return $model->userDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('user') ? true : false,
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -159,20 +183,23 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('creation') ? true : false,
 		];
-		$this->templateColumns['modified_date'] = [
-			'attribute' => 'modified_date',
+		$this->templateColumns['updated_date'] = [
+			'attribute' => 'updated_date',
 			'value' => function($model, $key, $index, $column) {
-				return Yii::$app->formatter->asDatetime($model->modified_date, 'medium');
+				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
-			'filter' => $this->filterDatepicker($this, 'modified_date'),
+			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['modifiedDisplayname'] = [
-			'attribute' => 'modifiedDisplayname',
+		$this->templateColumns['publish'] = [
+			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->modified) ? $model->modified->displayname : '-';
-				// return $model->modifiedDisplayname;
+				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				return $this->quickAction($url, $model->publish);
 			},
-			'visible' => !Yii::$app->request->get('modified') ? true : false,
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'text-center'],
+			'format' => 'raw',
+			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
 	}
 
@@ -203,10 +230,9 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->mentions = Json::decode($this->mentions);
-		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
+		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
+		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
-		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
 
 	/**
@@ -218,21 +244,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			if($this->isNewRecord) {
 				if($this->creation_id == null)
 					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}
-		}
-		return true;
-	}
-
-	/**
-	 * before save attributes
-	 */
-	public function beforeSave($insert)
-	{
-		if(parent::beforeSave($insert)) {
-			$this->mentions = Json::encode($this->mentions);
 		}
 		return true;
 	}

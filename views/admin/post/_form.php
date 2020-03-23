@@ -58,6 +58,14 @@ use app\components\widgets\ActiveForm;
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('newsfeed_param')); ?>
 
+<?php echo $form->field($model, 'likes')
+	->textInput(['type'=>'number', 'min'=>'1'])
+	->label($model->getAttributeLabel('likes')); ?>
+
+<?php echo $form->field($model, 'comments')
+	->textInput(['type'=>'number', 'min'=>'1'])
+	->label($model->getAttributeLabel('comments')); ?>
+
 <?php echo $form->field($model, 'privacy')
 	->dropDownList($model::getPrivacy(), ['prompt'=>''])
 	->label($model->getAttributeLabel('privacy')); ?>

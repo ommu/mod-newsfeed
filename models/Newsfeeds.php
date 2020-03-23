@@ -55,7 +55,9 @@ class Newsfeeds extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['privacy', 'app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
+    public $gridForbiddenColumn = ['privacy', 'app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
+
+    public $mentions = [];
 
 	public $memberDisplayname;
 	public $userDisplayname;
@@ -77,10 +79,11 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publish', 'app', 'member_id', 'user_id', 'privacy', 'newsfeed_type', 'newsfeed_post', 'newsfeed_param'], 'required'],
+			[['publish', 'app', 'member_id', 'user_id', 'privacy', 'newsfeed_post'], 'required'],
 			[['publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
 			[['newsfeed_type', 'newsfeed_post'], 'string'],
 			//[['newsfeed_param'], 'json'],
+			[['newsfeed_type', 'newsfeed_param'], 'safe'],
 			[['app'], 'string', 'max' => 32],
 		];
 	}
@@ -171,10 +174,12 @@ class Newsfeeds extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMentions($count=false)
+	public function getMentions($count=false, $publish=1)
 	{
 		if($count == false)
-			return $this->hasMany(NewsfeedMention::className(), ['newsfeed_id' => 'id']);
+			return $this->hasMany(NewsfeedMention::className(), ['newsfeed_id' => 'id'])
+			->alias('mentions')
+			->andOnCondition([sprintf('%s.publish', 'mentions') => $publish]);
 
 		$model = NewsfeedMention::find()
 			->alias('t')
@@ -304,6 +309,8 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['newsfeed_param'] = [
 			'attribute' => 'newsfeed_param',
 			'value' => function($model, $key, $index, $column) {
+				if(is_array($model->newsfeed_param) && empty($model->newsfeed_param))
+					return '-';
 				return Json::encode($model->newsfeed_param);
 			},
 		];
@@ -469,13 +476,39 @@ class Newsfeeds extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * function setMentions
+	 */
+	public function setMentions()
+	{
+		preg_match_all('#@([\\d\\w_.-]+)#', $this->newsfeed_post, $mentions, PREG_SET_ORDER);
+
+		$return = [];
+		if(!empty($mentions)) {
+			foreach ($mentions as $key => $val) {
+				$return[$val[1]] = [
+					'member_id' => '',
+					'user_id' => '',
+				];
+			}
+        }
+
+        $this->mentions = $return;
+
+		return $return;
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
 	{
 		parent::afterFind();
 
-		$this->newsfeed_param = Json::decode($this->newsfeed_param);
+		if($this->newsfeed_param == '')
+			$this->newsfeed_param = [];
+		else
+            $this->newsfeed_param = Json::decode($this->newsfeed_param);
+
 		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
@@ -489,6 +522,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function beforeValidate()
 	{
 		if(parent::beforeValidate()) {
+			$this->setMentions();
 			if($this->isNewRecord) {
 				if($this->user_id == null)
 					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
@@ -512,8 +546,55 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function beforeSave($insert)
 	{
 		if(parent::beforeSave($insert)) {
-			$this->newsfeed_param = Json::encode($this->newsfeed_param);
-		}
-		return true;
+			// set and change mentions
+            if($insert) {
+                $this->newsfeed_param = [];
+            }
+
+            // set mentions
+            if(!empty(($mentions = $this->mentions))) {
+                if(!isset($this->newsfeed_param['mention'])) {
+                    $this->newsfeed_param = ['mention' => $mentions];
+                } else {
+                    $this->newsfeed_param['mention'] = $mentions;
+                }
+            } else {
+                unset($this->newsfeed_param['mention']);
+            }
+
+            // set newsfeed param in json data
+            if(is_array($this->newsfeed_param) && !empty($this->newsfeed_param))
+            	$this->newsfeed_param = Json::encode($this->newsfeed_param);
+        }
+
+        return true;
+	}
+
+	/**
+	 * After save attributes
+	 */
+	public function afterSave($insert, $changedAttributes)
+	{
+        parent::afterSave($insert, $changedAttributes);
+
+        if($insert) {
+            // set mentions
+            if(!empty(($mentions = $this->mentions))) {
+                foreach ($mentions as $key => $val) {
+                    $model = new NewsfeedMention();
+                    $model->newsfeed_id = $this->id;
+                    if($val['member_id'] != '') {
+                        $model->member_id = $val['member_id'];
+                    }
+                    if($val['user_id'] != '') {
+                        $model->user_id = $val['user_id'];
+                    }
+                    $model->save();
+                }
+            }
+
+        } else {
+
+        }
 	}
 }

@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 5 January 2020, 23:14 WIB
+ * @modified date 19 March 2020, 14:23 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -23,6 +24,30 @@ class NewsfeedMention extends \yii\db\ActiveQuery
 		return $this->andWhere('[[status]]=1');
 	}
 	*/
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function published() 
+	{
+		return $this->andWhere(['t.publish' => 1]);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function unpublish() 
+	{
+		return $this->andWhere(['t.publish' => 0]);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function deleted() 
+	{
+		return $this->andWhere(['t.publish' => 2]);
+	}
 
 	/**
 	 * {@inheritdoc}
