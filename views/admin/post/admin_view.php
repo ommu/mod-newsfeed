@@ -50,12 +50,14 @@ $attributes = [
 	],
 	[
 		'attribute' => 'memberDisplayname',
-		'value' => isset($model->member) ? $model->member->displayname : '-',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'userDisplayname',
-		'value' => isset($model->user) ? $model->user->displayname : '-',
+        'value' => function ($model) {
+            $memberDisplayname = isset($model->member) ? $model->member->displayname : '-';
+            $userDisplayname = isset($model->user) ? $model->user->displayname : '-';
+            if ($userDisplayname != '-' && $memberDisplayname != $userDisplayname) {
+                return $memberDisplayname.'<br/>'.$userDisplayname;
+            }
+            return $memberDisplayname;
+        },
 		'visible' => !$small,
 	],
 	[
@@ -80,9 +82,9 @@ $attributes = [
 	[
 		'attribute' => 'newsfeed_param',
 		'value' => function ($model) {
-			if(is_array($model->newsfeed_param) && empty($model->newsfeed_param))
-				return '-';
-			return Json::encode($model->newsfeed_param);
+            if (is_array($model->newsfeed_param) && empty($model->newsfeed_param))
+                return '-';
+            return Json::encode($model->newsfeed_param);
 		},
 		'visible' => !$small,
 	],
@@ -148,7 +150,16 @@ $attributes = [
 		'attribute' => 'mentions',
 		'value' => function ($model) {
 			$mentions = $model->getMentions(true);
-			return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions])]);
+			return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'specifics',
+		'value' => function ($model) {
+			$specifics = $model->getSpecifics(true);
+			return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

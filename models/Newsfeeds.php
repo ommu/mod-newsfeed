@@ -6,6 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 5 January 2020, 23:13 WIB
+ * @modified date 31 March 2020, 19:58 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  * This is the model class for table "ommu_newsfeeds".
@@ -60,7 +61,6 @@ class Newsfeeds extends \app\components\ActiveRecord
     public $mentions = [];
 
 	public $memberDisplayname;
-	public $userDisplayname;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
 	public $updatedDisplayname;
@@ -116,7 +116,6 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'mentions' => Yii::t('app', 'Mentions'),
 			'specifics' => Yii::t('app', 'Specifics'),
 			'memberDisplayname' => Yii::t('app', 'Member'),
-			'userDisplayname' => Yii::t('app', 'User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 			'updatedDisplayname' => Yii::t('app', 'Updated'),
@@ -184,6 +183,12 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$model = NewsfeedMention::find()
 			->alias('t')
 			->where(['newsfeed_id' => $this->id]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
 		$mentions = $model->count();
 
 		return $mentions ? $mentions : 0;
@@ -281,18 +286,15 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['memberDisplayname'] = [
 			'attribute' => 'memberDisplayname',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->member) ? $model->member->displayname : '-';
+                $memberDisplayname = isset($model->member) ? $model->member->displayname : '-';
+                $userDisplayname = isset($model->user) ? $model->user->displayname : '-';
+                if ($userDisplayname != '-' && $memberDisplayname != $userDisplayname) {
+                    return $memberDisplayname.'<br/>'.$userDisplayname;
+                }
+                return $memberDisplayname;
 				// return $model->memberDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('member') ? true : false,
-		];
-		$this->templateColumns['userDisplayname'] = [
-			'attribute' => 'userDisplayname',
-			'value' => function($model, $key, $index, $column) {
-				return isset($model->user) ? $model->user->displayname : '-';
-				// return $model->userDisplayname;
-			},
-			'visible' => !Yii::$app->request->get('user') ? true : false,
 		];
 		$this->templateColumns['newsfeed_type'] = [
 			'attribute' => 'newsfeed_type',
@@ -309,9 +311,10 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['newsfeed_param'] = [
 			'attribute' => 'newsfeed_param',
 			'value' => function($model, $key, $index, $column) {
-				if(is_array($model->newsfeed_param) && empty($model->newsfeed_param))
-					return '-';
-				return Json::encode($model->newsfeed_param);
+                if (is_array($model->newsfeed_param) && empty($model->newsfeed_param)) {
+                    return '-';
+                }
+                return Json::encode($model->newsfeed_param);
 			},
 		];
 		$this->templateColumns['likes'] = [
@@ -395,7 +398,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'attribute' => 'mentions',
 			'value' => function($model, $key, $index, $column) {
 				$mentions = $model->getMentions(true);
-				return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions]), 'data-pjax'=>0]);
+				return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'text-center'],
@@ -504,13 +507,12 @@ class Newsfeeds extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		if($this->newsfeed_param == '')
-			$this->newsfeed_param = [];
-		else
+        if ($this->newsfeed_param == '') {
+            $this->newsfeed_param = [];
+        } else {
             $this->newsfeed_param = Json::decode($this->newsfeed_param);
-
+        }
 		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
-		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 		// $this->updatedDisplayname = isset($this->updated) ? $this->updated->displayname : '-';

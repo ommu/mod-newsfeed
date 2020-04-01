@@ -8,7 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:28 WIB
- * @modified date 20 March 2020, 16:20 WIB
+ * @modified date 31 March 2020, 20:56 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -29,7 +29,7 @@ class Newsfeeds extends NewsfeedsModel
 	{
 		return [
 			[['id', 'publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
-			[['app', 'newsfeed_type', 'newsfeed_post', 'newsfeed_param', 'creation_date', 'modified_date', 'updated_date', 'memberDisplayname', 'userDisplayname', 'creationDisplayname', 'modifiedDisplayname', 'updatedDisplayname'], 'safe'],
+			[['app', 'newsfeed_type', 'newsfeed_post', 'newsfeed_param', 'creation_date', 'modified_date', 'updated_date', 'memberDisplayname', 'creationDisplayname', 'modifiedDisplayname', 'updatedDisplayname'], 'safe'],
 		];
 	}
 
@@ -73,9 +73,7 @@ class Newsfeeds extends NewsfeedsModel
 			// 'updated updated'
 		]);
 		if((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != ''))
-			$query = $query->joinWith(['member member']);
-		if((isset($params['sort']) && in_array($params['sort'], ['userDisplayname', '-userDisplayname'])) || (isset($params['userDisplayname']) && $params['userDisplayname'] != ''))
-			$query = $query->joinWith(['user user']);
+			$query = $query->joinWith(['member member', 'user user']);
 		if((isset($params['sort']) && in_array($params['sort'], ['creationDisplayname', '-creationDisplayname'])) || (isset($params['creationDisplayname']) && $params['creationDisplayname'] != ''))
 			$query = $query->joinWith(['creation creation']);
 		if((isset($params['sort']) && in_array($params['sort'], ['modifiedDisplayname', '-modifiedDisplayname'])) || (isset($params['modifiedDisplayname']) && $params['modifiedDisplayname'] != ''))
@@ -98,10 +96,6 @@ class Newsfeeds extends NewsfeedsModel
 		$attributes['memberDisplayname'] = [
 			'asc' => ['member.displayname' => SORT_ASC],
 			'desc' => ['member.displayname' => SORT_DESC],
-		];
-		$attributes['userDisplayname'] = [
-			'asc' => ['user.displayname' => SORT_ASC],
-			'desc' => ['user.displayname' => SORT_DESC],
 		];
 		$attributes['creationDisplayname'] = [
 			'asc' => ['creation.displayname' => SORT_ASC],
@@ -155,12 +149,17 @@ class Newsfeeds extends NewsfeedsModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
+		if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {
+            $query->andWhere(['or', 
+                ['like', 'member.displayname', $this->memberDisplayname],
+                ['like', 'user.displayname', $this->memberDisplayname]
+            ]);
+        }
+
 		$query->andFilterWhere(['like', 't.app', $this->app])
 			->andFilterWhere(['like', 't.newsfeed_type', $this->newsfeed_type])
 			->andFilterWhere(['like', 't.newsfeed_post', $this->newsfeed_post])
 			->andFilterWhere(['like', 't.newsfeed_param', $this->newsfeed_param])
-			->andFilterWhere(['like', 'member.displayname', $this->memberDisplayname])
-			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])
 			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname])
 			->andFilterWhere(['like', 'updated.displayname', $this->updatedDisplayname]);
