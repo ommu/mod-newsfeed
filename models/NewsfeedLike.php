@@ -59,6 +59,7 @@ class NewsfeedLike extends \app\components\ActiveRecord
 		return [
 			[['newsfeed_id', 'user_id', 'likes_ip'], 'required'],
 			[['newsfeed_id', 'user_id', 'publish', 'like_react', 'updated_id'], 'integer'],
+			[['user_id'], 'safe'],
 			[['likes_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];

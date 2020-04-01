@@ -36,6 +36,18 @@ use app\modules\newsfeed\models\search\Newsfeeds as NewsfeedsSearch;
 
 class PostController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
+    {
+        parent::init();
+
+        if(Yii::$app->request->get('id')) {
+            $this->subMenu = $this->module->params['newsfeed_submenu'];
+        }
+    }
+
 	/**
 	 * {@inheritdoc}
 	 */

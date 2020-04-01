@@ -32,7 +32,6 @@ namespace app\modules\newsfeed\models;
 
 use Yii;
 use yii\helpers\Url;
-use yii\helpers\Json;
 use ommu\users\models\Users;
 use ommu\member\models\Members;
 
@@ -43,7 +42,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	public $gridForbiddenColumn = [];
 
 	public $memberDisplayname;
-	public $userDisplayname;
 	public $creationDisplayname;
 
 	/**
@@ -81,7 +79,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			'creation_id' => Yii::t('app', 'Creation'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'memberDisplayname' => Yii::t('app', 'Member'),
-			'userDisplayname' => Yii::t('app', 'User'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 		];
 	}
@@ -155,18 +152,15 @@ class NewsfeedMention extends \app\components\ActiveRecord
 		$this->templateColumns['memberDisplayname'] = [
 			'attribute' => 'memberDisplayname',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->member) ? $model->member->displayname : '-';
+                $memberDisplayname = isset($model->member) ? $model->member->displayname : '-';
+                $userDisplayname = isset($model->user) ? $model->user->displayname : '-';
+                if ($userDisplayname != '-' && $memberDisplayname != $userDisplayname) {
+                    return $memberDisplayname.'<br/>'.$userDisplayname;
+                }
+                return $memberDisplayname;
 				// return $model->memberDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('member') ? true : false,
-		];
-		$this->templateColumns['userDisplayname'] = [
-			'attribute' => 'userDisplayname',
-			'value' => function($model, $key, $index, $column) {
-				return isset($model->user) ? $model->user->displayname : '-';
-				// return $model->userDisplayname;
-			},
-			'visible' => !Yii::$app->request->get('user') ? true : false,
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -231,7 +225,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 		parent::afterFind();
 
 		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
-		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 	}
 
@@ -242,6 +235,8 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	{
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord) {
+				if($this->user_id == null)
+					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 				if($this->creation_id == null)
 					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}

@@ -57,9 +57,10 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'user_id', 'comment', 'comment_ip'], 'required'],
+			[['newsfeed_id', 'comment'], 'required'],
 			[['newsfeed_id', 'user_id', 'publish', 'updated_id'], 'integer'],
 			[['comment'], 'string'],
+			[['user_id'], 'safe'],
 			[['comment_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];

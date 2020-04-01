@@ -50,9 +50,9 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'user_id'], 'required'],
+			[['newsfeed_id'], 'required'],
 			[['newsfeed_id', 'user_id', 'except'], 'integer'],
-			[['creation_date'], 'safe'],
+			[['user_id'], 'safe'],
 			[['newsfeed_id', 'user_id'], 'unique', 'targetAttribute' => ['newsfeed_id', 'user_id']],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];

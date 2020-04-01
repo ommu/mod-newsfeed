@@ -22,7 +22,7 @@ use app\components\widgets\ActiveForm;
 
 <?php $form = ActiveForm::begin([
 	'options' => ['class'=>'form-horizontal form-label-left'],
-	'enableClientValidation' => true,
+	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
 	'fieldConfig' => [
@@ -54,9 +54,9 @@ use app\components\widgets\ActiveForm;
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('newsfeed_post')); ?>
 
-<?php echo $form->field($model, 'newsfeed_param')
+<?php /* echo $form->field($model, 'newsfeed_param')
 	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('newsfeed_param')); ?>
+	->label($model->getAttributeLabel('newsfeed_param')); */ ?>
 
 <?php echo $form->field($model, 'likes')
 	->textInput(['type'=>'number', 'min'=>'1'])
