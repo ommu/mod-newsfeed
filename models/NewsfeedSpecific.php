@@ -33,7 +33,6 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 
 	public $gridForbiddenColumn = [];
 
-	public $newsfeedId;
 	public $userDisplayname;
 
 	/**
@@ -68,7 +67,6 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 			'user_id' => Yii::t('app', 'User'),
 			'except' => Yii::t('app', 'Except'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
-			'newsfeedId' => Yii::t('app', 'Newsfeed'),
 			'userDisplayname' => Yii::t('app', 'User'),
 		];
 	}
@@ -116,11 +114,10 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class'=>'text-center'],
 		];
-		$this->templateColumns['newsfeedId'] = [
-			'attribute' => 'newsfeedId',
+		$this->templateColumns['newsfeed_id'] = [
+			'attribute' => 'newsfeed_id',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
-				// return $model->newsfeedId;
+				return $model->newsfeed_id;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
 		];
@@ -132,13 +129,6 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('user') ? true : false,
 		];
-		$this->templateColumns['creation_date'] = [
-			'attribute' => 'creation_date',
-			'value' => function($model, $key, $index, $column) {
-				return Yii::$app->formatter->asDatetime($model->creation_date, 'medium');
-			},
-			'filter' => $this->filterDatepicker($this, 'creation_date'),
-		];
 		$this->templateColumns['except'] = [
 			'attribute' => 'except',
 			'value' => function($model, $key, $index, $column) {
@@ -146,6 +136,13 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterYesNo(),
 			'contentOptions' => ['class'=>'text-center'],
+		];
+		$this->templateColumns['creation_date'] = [
+			'attribute' => 'creation_date',
+			'value' => function($model, $key, $index, $column) {
+				return Yii::$app->formatter->asDatetime($model->creation_date, 'medium');
+			},
+			'filter' => $this->filterDatepicker($this, 'creation_date'),
 		];
 	}
 
@@ -176,7 +173,6 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 	}
 

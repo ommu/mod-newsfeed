@@ -53,7 +53,11 @@ $attributes = [
             }
             return $memberDisplayname;
         },
-		'visible' => !$small,
+        'format' => 'html',
+	],
+	[
+		'attribute' => 'newsfeed_type',
+		'value' => $model->newsfeed_type ? $model->newsfeed_type : '-',
 	],
 	[
 		'attribute' => 'privacy',
@@ -62,11 +66,6 @@ $attributes = [
 				return '-';
 			return $model::getPrivacy($model->privacy);
 		},
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'newsfeed_type',
-		'value' => $model->newsfeed_type ? $model->newsfeed_type : '-',
 		'visible' => !$small,
 	],
 	[

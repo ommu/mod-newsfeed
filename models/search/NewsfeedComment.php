@@ -8,6 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:32 WIB
+ * @modified date 3 April 2020, 13:09 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -27,8 +28,8 @@ class NewsfeedComment extends NewsfeedCommentModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'newsfeed_id', 'member_id', 'user_id', 'updated_id'], 'integer'],
-			[['comment', 'comment_date', 'comment_ip', 'updated_date', 'newsfeedId', 'memberDisplayname', 'userDisplayname', 'updatedDisplayname'], 'safe'],
+			[['newsfeed_id', 'publish', 'user_id', 'updated_id'], 'integer'],
+			[['comment', 'comment_date', 'comment_ip', 'updated_date', 'userDisplayname', 'updatedDisplayname'], 'safe'],
 		];
 	}
 
@@ -65,21 +66,16 @@ class NewsfeedComment extends NewsfeedCommentModel
 		else
 			$query = NewsfeedCommentModel::find()->alias('t')->select($column);
 		$query->joinWith([
-			// 'newsfeed newsfeed', 
-			// 'member member', 
+			'newsfeed newsfeed', 
 			// 'user user', 
 			// 'updated updated'
 		]);
-		if((isset($params['sort']) && in_array($params['sort'], ['newsfeedId', '-newsfeedId'])) || (isset($params['newsfeedId']) && $params['newsfeedId'] != ''))
-			$query = $query->joinWith(['newsfeed newsfeed']);
-		if((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != ''))
-			$query = $query->joinWith(['member member']);
 		if((isset($params['sort']) && in_array($params['sort'], ['userDisplayname', '-userDisplayname'])) || (isset($params['userDisplayname']) && $params['userDisplayname'] != ''))
 			$query = $query->joinWith(['user user']);
 		if((isset($params['sort']) && in_array($params['sort'], ['updatedDisplayname', '-updatedDisplayname'])) || (isset($params['updatedDisplayname']) && $params['updatedDisplayname'] != ''))
 			$query = $query->joinWith(['updated updated']);
 
-		$query = $query->groupBy(['id']);
+		// $query = $query->groupBy(['newsfeed_id']);
 
 		// add conditions that should always apply here
 		$dataParams = [
@@ -91,14 +87,6 @@ class NewsfeedComment extends NewsfeedCommentModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['newsfeedId'] = [
-			'asc' => ['newsfeed.id' => SORT_ASC],
-			'desc' => ['newsfeed.id' => SORT_DESC],
-		];
-		$attributes['memberDisplayname'] = [
-			'asc' => ['member.displayname' => SORT_ASC],
-			'desc' => ['member.displayname' => SORT_DESC],
-		];
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
@@ -109,11 +97,11 @@ class NewsfeedComment extends NewsfeedCommentModel
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
-			'defaultOrder' => ['id' => SORT_DESC],
+			'defaultOrder' => ['newsfeed_id' => SORT_DESC],
 		]);
 
-		if(Yii::$app->request->get('id'))
-			unset($params['id']);
+		if(Yii::$app->request->get('newsfeed_id'))
+			unset($params['newsfeed_id']);
 		$this->load($params);
 
 		if(!$this->validate()) {
@@ -124,9 +112,7 @@ class NewsfeedComment extends NewsfeedCommentModel
 
 		// grid filtering conditions
 		$query->andFilterWhere([
-			't.id' => $this->id,
 			't.newsfeed_id' => isset($params['newsfeed']) ? $params['newsfeed'] : $this->newsfeed_id,
-			't.member_id' => isset($params['member']) ? $params['member'] : $this->member_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
 			'cast(t.comment_date as date)' => $this->comment_date,
 			'cast(t.updated_date as date)' => $this->updated_date,
@@ -144,8 +130,6 @@ class NewsfeedComment extends NewsfeedCommentModel
 
 		$query->andFilterWhere(['like', 't.comment', $this->comment])
 			->andFilterWhere(['like', 't.comment_ip', $this->comment_ip])
-			->andFilterWhere(['like', 'newsfeed.id', $this->newsfeedId])
-			->andFilterWhere(['like', 'member.displayname', $this->memberDisplayname])
 			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
 			->andFilterWhere(['like', 'updated.displayname', $this->updatedDisplayname]);
 

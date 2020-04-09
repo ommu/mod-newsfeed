@@ -11,17 +11,29 @@ newsfeed_submenu:
       0: 'admin/post/update'
       id: $_GET*id
     select: action
-  location:
-    label: Storage Location
+  specific:
+    label: Specific View(s)
     url:
-      0: 'admin/location'
-      id: $_GET*id
-    select: action
-  views:
-    label: View(s)
+      0: 'admin/specific/manage'
+      newsfeed: $_GET*newsfeed
+    select: controller
+  mention:
+    label: Mention(s)
     url:
-      0: 'view/admin/manage'
-      archive: $_GET*archive
+      0: 'admin/mention/manage'
+      newsfeed: $_GET*newsfeed
+    select: controller
+  comment:
+    label: Comment(s)
+    url:
+      0: 'admin/comment/manage'
+      newsfeed: $_GET*newsfeed
+    select: controller
+  like:
+    label: Like(s)
+    url:
+      0: 'admin/like/manage'
+      newsfeed: $_GET*newsfeed
     select: controller
   delete:
     label: Delete

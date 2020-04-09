@@ -39,7 +39,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['creationDisplayname', 'updated_date'];
 
 	public $memberDisplayname;
 	public $creationDisplayname;
@@ -160,6 +160,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
                 return $memberDisplayname;
 				// return $model->memberDisplayname;
 			},
+            'format' => 'html',
 			'visible' => !Yii::$app->request->get('member') ? true : false,
 		];
 		$this->templateColumns['creation_date'] = [
@@ -235,8 +236,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	{
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord) {
-				if($this->user_id == null)
-					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 				if($this->creation_id == null)
 					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}

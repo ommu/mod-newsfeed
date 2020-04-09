@@ -1,14 +1,13 @@
 <?php
 /**
- * NewsfeedLike
+ * NewsfeedMention
  *
- * NewsfeedLike represents the model behind the search form about `app\modules\newsfeed\models\NewsfeedLike`.
+ * NewsfeedMention represents the model behind the search form about `app\modules\newsfeed\models\NewsfeedMention`.
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 6 January 2020, 11:31 WIB
- * @modified date 3 April 2020, 13:09 WIB
+ * @created date 3 April 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -18,9 +17,9 @@ namespace app\modules\newsfeed\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\newsfeed\models\NewsfeedLike as NewsfeedLikeModel;
+use app\modules\newsfeed\models\NewsfeedMention as NewsfeedMentionModel;
 
-class NewsfeedLike extends NewsfeedLikeModel
+class NewsfeedMention extends NewsfeedMentionModel
 {
 	/**
 	 * {@inheritdoc}
@@ -28,8 +27,8 @@ class NewsfeedLike extends NewsfeedLikeModel
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'publish', 'user_id', 'like_react', 'updated_id'], 'integer'],
-			[['likes_date', 'likes_ip', 'updated_date', 'userDisplayname', 'updatedDisplayname'], 'safe'],
+			[['newsfeed_id', 'publish', 'member_id', 'user_id', 'creation_id'], 'integer'],
+			[['creation_date', 'updated_date', 'memberDisplayname', 'creationDisplayname'], 'safe'],
 		];
 	}
 
@@ -62,18 +61,19 @@ class NewsfeedLike extends NewsfeedLikeModel
 	public function search($params, $column=null)
 	{
 		if(!($column && is_array($column)))
-			$query = NewsfeedLikeModel::find()->alias('t');
+			$query = NewsfeedMentionModel::find()->alias('t');
 		else
-			$query = NewsfeedLikeModel::find()->alias('t')->select($column);
+			$query = NewsfeedMentionModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'newsfeed newsfeed', 
+			// 'member member', 
 			// 'user user', 
-			// 'updated updated'
+			// 'creation creation'
 		]);
-		if((isset($params['sort']) && in_array($params['sort'], ['userDisplayname', '-userDisplayname'])) || (isset($params['userDisplayname']) && $params['userDisplayname'] != ''))
-			$query = $query->joinWith(['user user']);
-		if((isset($params['sort']) && in_array($params['sort'], ['updatedDisplayname', '-updatedDisplayname'])) || (isset($params['updatedDisplayname']) && $params['updatedDisplayname'] != ''))
-			$query = $query->joinWith(['updated updated']);
+		if((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != ''))
+			$query = $query->joinWith(['member member', 'user user']);
+		if((isset($params['sort']) && in_array($params['sort'], ['creationDisplayname', '-creationDisplayname'])) || (isset($params['creationDisplayname']) && $params['creationDisplayname'] != ''))
+			$query = $query->joinWith(['creation creation']);
 
 		// $query = $query->groupBy(['newsfeed_id']);
 
@@ -87,13 +87,13 @@ class NewsfeedLike extends NewsfeedLikeModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['userDisplayname'] = [
-			'asc' => ['user.displayname' => SORT_ASC],
-			'desc' => ['user.displayname' => SORT_DESC],
+		$attributes['memberDisplayname'] = [
+			'asc' => ['member.displayname' => SORT_ASC],
+			'desc' => ['member.displayname' => SORT_DESC],
 		];
-		$attributes['updatedDisplayname'] = [
-			'asc' => ['updated.displayname' => SORT_ASC],
-			'desc' => ['updated.displayname' => SORT_DESC],
+		$attributes['creationDisplayname'] = [
+			'asc' => ['creation.displayname' => SORT_ASC],
+			'desc' => ['creation.displayname' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -113,11 +113,11 @@ class NewsfeedLike extends NewsfeedLikeModel
 		// grid filtering conditions
 		$query->andFilterWhere([
 			't.newsfeed_id' => isset($params['newsfeed']) ? $params['newsfeed'] : $this->newsfeed_id,
+			't.member_id' => isset($params['member']) ? $params['member'] : $this->member_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
-			't.like_react' => $this->like_react,
-			'cast(t.likes_date as date)' => $this->likes_date,
+			'cast(t.creation_date as date)' => $this->creation_date,
+			't.creation_id' => isset($params['creation']) ? $params['creation'] : $this->creation_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
-			't.updated_id' => isset($params['updated']) ? $params['updated'] : $this->updated_id,
 		]);
 
 		if(isset($params['trash']))
@@ -129,9 +129,14 @@ class NewsfeedLike extends NewsfeedLikeModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-		$query->andFilterWhere(['like', 't.likes_ip', $this->likes_ip])
-			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-			->andFilterWhere(['like', 'updated.displayname', $this->updatedDisplayname]);
+        if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {
+            $query->andWhere(['or', 
+                ['like', 'member.displayname', $this->memberDisplayname],
+                ['like', 'user.displayname', $this->memberDisplayname]
+            ]);
+        }
+
+		$query->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname]);
 
 		return $dataProvider;
 	}

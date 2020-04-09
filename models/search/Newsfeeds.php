@@ -149,7 +149,7 @@ class Newsfeeds extends NewsfeedsModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-		if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {
+        if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {
             $query->andWhere(['or', 
                 ['like', 'member.displayname', $this->memberDisplayname],
                 ['like', 'user.displayname', $this->memberDisplayname]

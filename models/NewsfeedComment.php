@@ -12,8 +12,8 @@
  *
  * The followings are the available columns in table "ommu_newsfeed_comment":
  * @property integer $newsfeed_id
- * @property integer $user_id
  * @property integer $publish
+ * @property integer $user_id
  * @property string $comment
  * @property string $comment_date
  * @property string $comment_ip
@@ -37,9 +37,8 @@ class NewsfeedComment extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['comment_ip', 'updated_date', 'updatedDisplayname'];
 
-	public $newsfeedId;
 	public $userDisplayname;
 	public $updatedDisplayname;
 
@@ -58,7 +57,7 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
 		return [
 			[['newsfeed_id', 'comment'], 'required'],
-			[['newsfeed_id', 'user_id', 'publish', 'updated_id'], 'integer'],
+			[['newsfeed_id', 'publish', 'user_id', 'updated_id'], 'integer'],
 			[['comment'], 'string'],
 			[['user_id'], 'safe'],
 			[['comment_ip'], 'string', 'max' => 20],
@@ -73,14 +72,13 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
 		return [
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
-			'user_id' => Yii::t('app', 'User'),
 			'publish' => Yii::t('app', 'Publish'),
+			'user_id' => Yii::t('app', 'User'),
 			'comment' => Yii::t('app', 'Comment'),
 			'comment_date' => Yii::t('app', 'Comment Date'),
 			'comment_ip' => Yii::t('app', 'Comment Ip'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'updated_id' => Yii::t('app', 'Updated'),
-			'newsfeedId' => Yii::t('app', 'Newsfeed'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'updatedDisplayname' => Yii::t('app', 'Updated'),
 		];
@@ -137,11 +135,10 @@ class NewsfeedComment extends \app\components\ActiveRecord
 			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class'=>'text-center'],
 		];
-		$this->templateColumns['newsfeedId'] = [
-			'attribute' => 'newsfeedId',
+		$this->templateColumns['newsfeed_id'] = [
+			'attribute' => 'newsfeed_id',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
-				// return $model->newsfeedId;
+				return $model->newsfeed_id;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
 		];
@@ -227,7 +224,6 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->updatedDisplayname = isset($this->updated) ? $this->updated->displayname : '-';
 	}

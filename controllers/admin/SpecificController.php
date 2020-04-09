@@ -1,25 +1,23 @@
 <?php
 /**
- * LikeController
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\NewsfeedLike
+ * SpecificController
+ * @var $this app\modules\newsfeed\controllers\admin\SpecificController
+ * @var $model app\modules\newsfeed\models\NewsfeedSpecific
  *
- * LikeController implements the CRUD actions for NewsfeedLike model.
+ * SpecificController implements the CRUD actions for NewsfeedSpecific model.
  * Reference start
  * TOC :
  *	Index
  *	Manage
  *	View
  *	Delete
- *	RunAction
- *	Publish
  *
  *	findModel
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 6 January 2020, 11:31 WIB
+ * @created date 3 April 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -30,10 +28,10 @@ use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\NewsfeedLike;
-use app\modules\newsfeed\models\search\NewsfeedLike as NewsfeedLikeSearch;
+use app\modules\newsfeed\models\NewsfeedSpecific;
+use app\modules\newsfeed\models\search\NewsfeedSpecific as NewsfeedSpecificSearch;
 
-class LikeController extends Controller
+class SpecificController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -60,7 +58,6 @@ class LikeController extends Controller
 				'class' => VerbFilter::className(),
 				'actions' => [
 					'delete' => ['POST'],
-					'publish' => ['POST'],
 				],
 			],
 		];
@@ -75,12 +72,12 @@ class LikeController extends Controller
 	}
 
 	/**
-	 * Lists all NewsfeedLike models.
+	 * Lists all NewsfeedSpecific models.
 	 * @return mixed
 	 */
 	public function actionManage()
 	{
-		$searchModel = new NewsfeedLikeSearch();
+		$searchModel = new NewsfeedSpecificSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
 		$gridColumn = Yii::$app->request->get('GridColumn', null);
@@ -98,7 +95,7 @@ class LikeController extends Controller
             $newsfeed = \app\modules\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
 
-		$this->view->title = Yii::t('app', 'Likes');
+		$this->view->title = Yii::t('app', 'Specifics');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
@@ -110,7 +107,7 @@ class LikeController extends Controller
 	}
 
 	/**
-	 * Displays a single NewsfeedLike model.
+	 * Displays a single NewsfeedSpecific model.
 	 * @param integer $id
 	 * @return mixed
 	 */
@@ -119,7 +116,7 @@ class LikeController extends Controller
 		$model = $this->findModel($id);
         $this->subMenuParam = $model->newsfeed_id;
 
-		$this->view->title = Yii::t('app', 'Detail Like: {newsfeed-id}', ['newsfeed-id' => $model->newsfeed->id]);
+		$this->view->title = Yii::t('app', 'Detail Specific: {newsfeed-id}', ['newsfeed-id' => $model->newsfeed->id]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [
@@ -128,7 +125,7 @@ class LikeController extends Controller
 	}
 
 	/**
-	 * Deletes an existing NewsfeedLike model.
+	 * Deletes an existing NewsfeedSpecific model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -136,42 +133,22 @@ class LikeController extends Controller
 	public function actionDelete($id)
 	{
 		$model = $this->findModel($id);
-		$model->publish = 2;
+		$model->delete();
 
-		if($model->save(false, ['publish'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed like success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
-		}
+		Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed specific success deleted.'));
+		return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 	}
 
 	/**
-	 * actionPublish an existing NewsfeedLike model.
-	 * If publish is successful, the browser will be redirected to the 'index' page.
-	 * @param integer $id
-	 * @return mixed
-	 */
-	public function actionPublish($id)
-	{
-		$model = $this->findModel($id);
-		$replace = $model->publish == 1 ? 0 : 1;
-		$model->publish = $replace;
-
-		if($model->save(false, ['publish'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed like success updated.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
-		}
-	}
-
-	/**
-	 * Finds the NewsfeedLike model based on its primary key value.
+	 * Finds the NewsfeedSpecific model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return NewsfeedLike the loaded model
+	 * @return NewsfeedSpecific the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if(($model = NewsfeedLike::findOne($id)) !== null)
+		if(($model = NewsfeedSpecific::findOne($id)) !== null)
 			return $model;
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

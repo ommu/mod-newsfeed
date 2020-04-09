@@ -294,6 +294,7 @@ class Newsfeeds extends \app\components\ActiveRecord
                 return $memberDisplayname;
 				// return $model->memberDisplayname;
 			},
+            'format' => 'html',
 			'visible' => !Yii::$app->request->get('member') ? true : false,
 		];
 		$this->templateColumns['newsfeed_type'] = [

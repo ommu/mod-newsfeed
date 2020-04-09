@@ -10,6 +10,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:32 WIB
+ * @modified date 3 April 2020, 13:09 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -31,7 +32,7 @@ $this->params['menu']['option'] = [
 <?php Pjax::begin(); ?>
 
 <?php if($newsfeed != null)
-	echo $this->render('/newsfeed/admin_view', ['model'=>$newsfeed, 'small'=>true]); ?>
+	echo $this->render('/admin/post/admin_view', ['model'=>$newsfeed, 'small'=>true]); ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 

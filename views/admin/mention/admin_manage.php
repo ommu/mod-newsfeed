@@ -1,16 +1,15 @@
 <?php
 /**
- * Newsfeed Likes (newsfeed-like)
+ * Newsfeed Mentions (newsfeed-mention)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\NewsfeedLike
- * @var $searchModel app\modules\newsfeed\models\search\NewsfeedLike
+ * @var $this app\modules\newsfeed\controllers\admin\MentionController
+ * @var $model app\modules\newsfeed\models\NewsfeedMention
+ * @var $searchModel app\modules\newsfeed\models\search\NewsfeedMention
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 6 January 2020, 11:31 WIB
- * @modified date 3 April 2020, 13:09 WIB
+ * @created date 3 April 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -28,7 +27,7 @@ $this->params['menu']['option'] = [
 ];
 ?>
 
-<div class="newsfeed-like-manage">
+<div class="newsfeed-mention-manage">
 <?php Pjax::begin(); ?>
 
 <?php if($newsfeed != null)
@@ -53,14 +52,14 @@ array_push($columnData, [
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Like')]);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title'=>Yii::t('app', 'Detail Mention')]);
 		},
 		'update' => function ($url, $model, $key) {
-			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title'=>Yii::t('app', 'Update Like')]);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title'=>Yii::t('app', 'Update Mention')]);
 		},
 		'delete' => function ($url, $model, $key) {
 			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-				'title' => Yii::t('app', 'Delete Like'),
+				'title' => Yii::t('app', 'Delete Mention'),
 				'data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
 				'data-method'  => 'post',
 			]);

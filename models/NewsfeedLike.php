@@ -12,8 +12,8 @@
  *
  * The followings are the available columns in table "ommu_newsfeed_like":
  * @property integer $newsfeed_id
- * @property integer $user_id
  * @property integer $publish
+ * @property integer $user_id
  * @property integer $like_react
  * @property string $likes_date
  * @property string $likes_ip
@@ -37,9 +37,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['likes_ip', 'updated_date', 'updatedDisplayname'];
 
-	public $newsfeedId;
 	public $userDisplayname;
 	public $updatedDisplayname;
 
@@ -57,8 +56,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'user_id', 'likes_ip'], 'required'],
-			[['newsfeed_id', 'user_id', 'publish', 'like_react', 'updated_id'], 'integer'],
+			[['newsfeed_id', 'likes_ip'], 'required'],
+			[['newsfeed_id', 'publish', 'user_id', 'like_react', 'updated_id'], 'integer'],
 			[['user_id'], 'safe'],
 			[['likes_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
@@ -72,14 +71,13 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	{
 		return [
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
-			'user_id' => Yii::t('app', 'User'),
 			'publish' => Yii::t('app', 'Publish'),
+			'user_id' => Yii::t('app', 'User'),
 			'like_react' => Yii::t('app', 'Like React'),
 			'likes_date' => Yii::t('app', 'Likes Date'),
 			'likes_ip' => Yii::t('app', 'Likes Ip'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'updated_id' => Yii::t('app', 'Updated'),
-			'newsfeedId' => Yii::t('app', 'Newsfeed'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'updatedDisplayname' => Yii::t('app', 'Updated'),
 		];
@@ -136,11 +134,10 @@ class NewsfeedLike extends \app\components\ActiveRecord
 			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class'=>'text-center'],
 		];
-		$this->templateColumns['newsfeedId'] = [
-			'attribute' => 'newsfeedId',
+		$this->templateColumns['newsfeed_id'] = [
+			'attribute' => 'newsfeed_id',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
-				// return $model->newsfeedId;
+				return $model->newsfeed_id;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
 		];
@@ -151,6 +148,14 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				// return $model->userDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('user') ? true : false,
+		];
+		$this->templateColumns['like_react'] = [
+			'attribute' => 'like_react',
+			'value' => function($model, $key, $index, $column) {
+				return $this->filterYesNo($model->like_react);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['likes_date'] = [
 			'attribute' => 'likes_date',
@@ -179,14 +184,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				// return $model->updatedDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('updated') ? true : false,
-		];
-		$this->templateColumns['like_react'] = [
-			'attribute' => 'like_react',
-			'value' => function($model, $key, $index, $column) {
-				return $this->filterYesNo($model->like_react);
-			},
-			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
@@ -228,7 +225,6 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->updatedDisplayname = isset($this->updated) ? $this->updated->displayname : '-';
 	}

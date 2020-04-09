@@ -1,14 +1,13 @@
 <?php
 /**
- * NewsfeedLike
+ * NewsfeedSpecific
  *
- * NewsfeedLike represents the model behind the search form about `app\modules\newsfeed\models\NewsfeedLike`.
+ * NewsfeedSpecific represents the model behind the search form about `app\modules\newsfeed\models\NewsfeedSpecific`.
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 6 January 2020, 11:31 WIB
- * @modified date 3 April 2020, 13:09 WIB
+ * @created date 3 April 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -18,9 +17,9 @@ namespace app\modules\newsfeed\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\newsfeed\models\NewsfeedLike as NewsfeedLikeModel;
+use app\modules\newsfeed\models\NewsfeedSpecific as NewsfeedSpecificModel;
 
-class NewsfeedLike extends NewsfeedLikeModel
+class NewsfeedSpecific extends NewsfeedSpecificModel
 {
 	/**
 	 * {@inheritdoc}
@@ -28,8 +27,8 @@ class NewsfeedLike extends NewsfeedLikeModel
 	public function rules()
 	{
 		return [
-			[['newsfeed_id', 'publish', 'user_id', 'like_react', 'updated_id'], 'integer'],
-			[['likes_date', 'likes_ip', 'updated_date', 'userDisplayname', 'updatedDisplayname'], 'safe'],
+			[['newsfeed_id', 'user_id', 'except'], 'integer'],
+			[['creation_date', 'userDisplayname'], 'safe'],
 		];
 	}
 
@@ -62,18 +61,15 @@ class NewsfeedLike extends NewsfeedLikeModel
 	public function search($params, $column=null)
 	{
 		if(!($column && is_array($column)))
-			$query = NewsfeedLikeModel::find()->alias('t');
+			$query = NewsfeedSpecificModel::find()->alias('t');
 		else
-			$query = NewsfeedLikeModel::find()->alias('t')->select($column);
+			$query = NewsfeedSpecificModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'newsfeed newsfeed', 
-			// 'user user', 
-			// 'updated updated'
+			// 'user user'
 		]);
 		if((isset($params['sort']) && in_array($params['sort'], ['userDisplayname', '-userDisplayname'])) || (isset($params['userDisplayname']) && $params['userDisplayname'] != ''))
 			$query = $query->joinWith(['user user']);
-		if((isset($params['sort']) && in_array($params['sort'], ['updatedDisplayname', '-updatedDisplayname'])) || (isset($params['updatedDisplayname']) && $params['updatedDisplayname'] != ''))
-			$query = $query->joinWith(['updated updated']);
 
 		// $query = $query->groupBy(['newsfeed_id']);
 
@@ -90,10 +86,6 @@ class NewsfeedLike extends NewsfeedLikeModel
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
-		];
-		$attributes['updatedDisplayname'] = [
-			'asc' => ['updated.displayname' => SORT_ASC],
-			'desc' => ['updated.displayname' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -114,24 +106,11 @@ class NewsfeedLike extends NewsfeedLikeModel
 		$query->andFilterWhere([
 			't.newsfeed_id' => isset($params['newsfeed']) ? $params['newsfeed'] : $this->newsfeed_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
-			't.like_react' => $this->like_react,
-			'cast(t.likes_date as date)' => $this->likes_date,
-			'cast(t.updated_date as date)' => $this->updated_date,
-			't.updated_id' => isset($params['updated']) ? $params['updated'] : $this->updated_id,
+			't.except' => $this->except,
+			'cast(t.creation_date as date)' => $this->creation_date,
 		]);
 
-		if(isset($params['trash']))
-			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
-		else {
-			if(!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == ''))
-				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
-			else
-				$query->andFilterWhere(['t.publish' => $this->publish]);
-		}
-
-		$query->andFilterWhere(['like', 't.likes_ip', $this->likes_ip])
-			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-			->andFilterWhere(['like', 'updated.displayname', $this->updatedDisplayname]);
+		$query->andFilterWhere(['like', 'user.displayname', $this->userDisplayname]);
 
 		return $dataProvider;
 	}

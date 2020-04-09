@@ -1,15 +1,15 @@
 <?php
 /**
- * Newsfeed Likes (newsfeed-like)
+ * Newsfeed Specifics (newsfeed-specific)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\search\NewsfeedLike
+ * @var $this app\modules\newsfeed\controllers\admin\SpecificController
+ * @var $model app\modules\newsfeed\models\search\NewsfeedSpecific
  * @var $form yii\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 6 January 2020, 11:31 WIB
+ * @created date 3 April 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 ?>
 
-<div class="newsfeed-like-search search-form">
+<div class="newsfeed-specific-search search-form">
 
 	<?php $form = ActiveForm::begin([
 		'action' => ['index'],
@@ -28,24 +28,12 @@ use yii\widgets\ActiveForm;
 		],
 	]); ?>
 
-		<?php echo $form->field($model, 'newsfeed_id');?>
-
 		<?php echo $form->field($model, 'userDisplayname');?>
 
-		<?php echo $form->field($model, 'like_react')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
-
-		<?php echo $form->field($model, 'likes_date')
+		<?php echo $form->field($model, 'creation_date')
 			->input('date');?>
 
-		<?php echo $form->field($model, 'likes_ip');?>
-
-		<?php echo $form->field($model, 'updated_date')
-			->input('date');?>
-
-		<?php echo $form->field($model, 'updatedDisplayname');?>
-
-		<?php echo $form->field($model, 'publish')
+		<?php echo $form->field($model, 'except')
 			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
 
 		<div class="form-group">

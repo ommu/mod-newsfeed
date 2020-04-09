@@ -113,6 +113,7 @@ class PostController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+        $this->subMenuParam = $model->id;
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
@@ -146,6 +147,7 @@ class PostController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
+        $this->subMenuParam = $model->id;
 
 		$this->view->title = Yii::t('app', 'Detail Newsfeed: {id}', ['id' => $model->id]);
 		$this->view->description = '';

@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 11:31 WIB
+ * @modified date 3 April 2020, 13:09 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */
@@ -22,8 +23,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Likes'), 'url' => ['
 $this->params['breadcrumbs'][] = $model->newsfeed->id;
 
 $this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->newsfeed_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
 ];
 } ?>
 
@@ -32,14 +32,20 @@ $this->params['menu']['content'] = [
 <?php
 $attributes = [
 	[
-		'attribute' => 'newsfeedId',
+		'attribute' => 'newsfeed_id',
 		'value' => function ($model) {
-			$newsfeedId = isset($model->newsfeed) ? $model->newsfeed->id : '-';
-			if($newsfeedId != '-')
-				return Html::a($newsfeedId, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeedId, 'class'=>'modal-btn']);
-			return $newsfeedId;
+			$newsfeed_id = isset($model->newsfeed) ? $model->newsfeed->id : '-';
+			if($newsfeed_id != '-')
+				return Html::a($newsfeed_id, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeed_id, 'class'=>'modal-btn']);
+			return $newsfeed_id;
 		},
 		'format' => 'html',
+	],
+	[
+		'attribute' => 'publish',
+		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'format' => 'raw',
+		'visible' => !$small,
 	],
 	[
 		'attribute' => 'userDisplayname',
@@ -47,9 +53,8 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
-		'format' => 'raw',
+		'attribute' => 'like_react',
+		'value' => $model->filterYesNo($model->like_react),
 		'visible' => !$small,
 	],
 	[

@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
 		],
 	]); ?>
 
-		<?php echo $form->field($model, 'newsfeedId');?>
+		<?php echo $form->field($model, 'newsfeed_id');?>
 
 		<?php echo $form->field($model, 'userDisplayname');?>
 
