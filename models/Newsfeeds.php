@@ -51,14 +51,16 @@ use yii\helpers\Url;
 use yii\helpers\Json;
 use ommu\users\models\Users;
 use ommu\member\models\Members;
+use yii\helpers\ArrayHelper;
 
 class Newsfeeds extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-    public $gridForbiddenColumn = ['privacy', 'app', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
+    public $gridForbiddenColumn = ['app', 'privacy', 'newsfeed_param', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
 
     public $mentions = [];
+    public $oldMentions = [];
 
 	public $memberDisplayname;
 	public $creationDisplayname;
@@ -84,6 +86,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 			[['newsfeed_type', 'newsfeed_post'], 'string'],
 			//[['newsfeed_param'], 'json'],
 			[['newsfeed_type', 'newsfeed_param'], 'safe'],
+			[['newsfeed_type'], 'string', 'max' => 16],
 			[['app'], 'string', 'max' => 32],
 		];
 	}
@@ -300,8 +303,11 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['newsfeed_type'] = [
 			'attribute' => 'newsfeed_type',
 			'value' => function($model, $key, $index, $column) {
-				return $model->newsfeed_type;
+                $newsfeedType = $model->newsfeed_type ? $model->newsfeed_type : 'text';
+                return $model::getType($newsfeedType);
 			},
+            'filter' => self::getType(),
+            'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['newsfeed_post'] = [
 			'attribute' => 'newsfeed_post',
@@ -479,27 +485,54 @@ class Newsfeeds extends \app\components\ActiveRecord
 			return $items;
 	}
 
-	/**
-	 * function setMentions
-	 */
-	public function setMentions()
-	{
-		preg_match_all('#@([\\d\\w_.-]+)#', $this->newsfeed_post, $mentions, PREG_SET_ORDER);
+    /**
+     * function getType
+     */
+    public static function getType($value=null)
+    {
+        $items = array(
+            'text' => Yii::t('app', 'Text (default)'),
+            'album' => Yii::t('app', 'Album Photo'),
+            'link' => Yii::t('app', 'Share Link'),
+            'vacancy' => Yii::t('app', 'Vacancy'),
+        );
 
-		$return = [];
-		if(!empty($mentions)) {
-			foreach ($mentions as $key => $val) {
-				$return[$val[1]] = [
-					'member_id' => '',
-					'user_id' => '',
-				];
-			}
+        if($value !== null)
+            return $items[$value];
+        else
+            return $items;
+    }
+
+    /**
+     * function setMentions
+     */
+    public function setMentions()
+    {
+        preg_match_all('#@([\\d\\w_.-]+)#', $this->newsfeed_post, $mentions, PREG_SET_ORDER);
+
+        $return = [];
+        if (!empty($mentions)) {
+            if (!$this->isNewRecord) {
+                $oldMentions = $this->oldMentions;
+            }
+
+            foreach ($mentions as $key => $val) {
+                if ($this->isNewRecord) {
+                    $return[$val[1]] = Members::getMemberUserId($val[1]);
+                } else {
+                    if (array_key_exists($key, $oldMentions)) {
+                        $return[$val[1]] = $oldMentions($val[1]);
+                    } else {
+                        $return[$val[1]] = Members::getMemberUserId($val[1]);
+                    }
+                }
+            }
         }
 
         $this->mentions = $return;
 
-		return $return;
-	}
+        return $return;
+    }
 
 	/**
 	 * after find attributes
@@ -512,6 +545,10 @@ class Newsfeeds extends \app\components\ActiveRecord
             $this->newsfeed_param = [];
         } else {
             $this->newsfeed_param = Json::decode($this->newsfeed_param);
+        }
+
+        if (isset($this->newsfeed_param['mention'])) {
+            $this->oldMentions = $this->newsfeed_param['mention'];
         }
 		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
@@ -550,23 +587,22 @@ class Newsfeeds extends \app\components\ActiveRecord
 	{
 		if(parent::beforeSave($insert)) {
 			// set and change mentions
-            if($insert) {
+            if ($insert) {
                 $this->newsfeed_param = [];
             }
 
             // set mentions
-            if(!empty(($mentions = $this->mentions))) {
-                if(!isset($this->newsfeed_param['mention'])) {
-                    $this->newsfeed_param = ['mention' => $mentions];
-                } else {
-                    $this->newsfeed_param['mention'] = $mentions;
+            if (!empty(($mentions = $this->mentions))) {
+                if (isset($this->newsfeed_param['mention'])) {
+                    unset($this->newsfeed_param['mention']);
                 }
+                $this->newsfeed_param = ['mention' => $mentions];
             } else {
                 unset($this->newsfeed_param['mention']);
             }
 
             // set newsfeed param in json data
-            if(is_array($this->newsfeed_param) && !empty($this->newsfeed_param))
+            if (is_array($this->newsfeed_param))
             	$this->newsfeed_param = Json::encode($this->newsfeed_param);
         }
 
@@ -582,22 +618,52 @@ class Newsfeeds extends \app\components\ActiveRecord
 
         if($insert) {
             // set mentions
-            if(!empty(($mentions = $this->mentions))) {
+            if (!empty(($mentions = $this->mentions))) {
                 foreach ($mentions as $key => $val) {
-                    $model = new NewsfeedMention();
-                    $model->newsfeed_id = $this->id;
-                    if($val['member_id'] != '') {
+                    if ($val['member_id'] != '') {
+                        $model = new NewsfeedMention();
+                        $model->newsfeed_id = $this->id;
                         $model->member_id = $val['member_id'];
+                        if ($val['user_id'] != '') {
+                            $model->user_id = $val['user_id'];
+                        }
+                        $model->save();
                     }
-                    if($val['user_id'] != '') {
-                        $model->user_id = $val['user_id'];
-                    }
-                    $model->save();
                 }
             }
 
         } else {
+            // insert difference mentions
+            $oldMentions = $this->oldMentions;
+            if (!empty(($mentions = $this->mentions))) {
+                foreach ($mentions as $key => $val) {
+                    if (array_key_exists($key, $oldMentions)) {
+                        unset($oldMentions[$key]);
+                        continue;
+                    }
 
+                    if ($val['member_id'] != '') {
+                        $model = new NewsfeedMention();
+                        $model->newsfeed_id = $this->id;
+                        $model->member_id = $val['member_id'];
+                        if ($val['user_id'] != '') {
+                            $model->user_id = $val['user_id'];
+                        }
+                        $model->save();
+                    }
+                }
+            }
+
+            // drop difference mentions
+            if(!empty($oldMentions)) {
+                foreach ($oldMentions as $key => $val) {
+                    NewsfeedMention::find()
+                        ->select(['id'])
+                        ->where(['newsfeed_id'=>$this->id, 'member_id'=>$val['member_id']])
+                        ->one()
+                        ->delete();
+                }
+            }
         }
 	}
 }
