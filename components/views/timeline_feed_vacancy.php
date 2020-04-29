@@ -24,6 +24,7 @@ $urlAsset = UpgradidAsset::register($this);
     <?php echo TimelineAuthor::widget([
         'model' => $member,
         'postDate' => $model->creation_date,
+        'separator' => true,
     ]);?>
 
     <div class="post-text border-bottom py-2 px-3">
@@ -86,6 +87,7 @@ $urlAsset = UpgradidAsset::register($this);
     <?php echo TimelineAuthor::widget([
         'model' => $member,
         'postDate' => $model->creation_date,
+        'separator' => true,
     ]);?>
 
     <div class="post-text">

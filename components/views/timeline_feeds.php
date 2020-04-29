@@ -47,8 +47,6 @@ $urlAsset = UpgradidAsset::register($this);
     ]);
 
     Pjax::end(); ?>
-
-    <?php //echo TimelineFeedContent::widget();?>
 </div>
 <div class="loading-feed"></div>
 <div class="page-load-status p-2">

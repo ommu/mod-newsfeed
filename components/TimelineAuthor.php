@@ -14,6 +14,7 @@ namespace app\modules\newsfeed\components;
 
 use Yii;
 use yii\helpers\Url;
+use ommu\member\models\Members;
 
 class TimelineAuthor extends \yii\base\Widget
 {
@@ -28,6 +29,10 @@ class TimelineAuthor extends \yii\base\Widget
     /**
      * {@inheritdoc}
      */
+    public $separator = false;
+    /**
+     * {@inheritdoc}
+     */
     public $memberContent = [];
 
     /**
@@ -35,9 +40,25 @@ class TimelineAuthor extends \yii\base\Widget
      */
     public function init()
     {
-        // if(isset($this->model)) {
+        $model = $this->model;
+        if ($model) {
+            $photo = join('/', [Url::base(), 'public/member/unisex.png']);
+            $uploadPath = join('/', [Members::getUploadPath(), $model->member_id]);
+            if ($model->photo_profile != '' && file_exists(join('/', [$uploadPath, $model->photo_profile]))) {
+                $uploadPath = join('/', [Members::getUploadPath(false), $model->member_id]);
+                $photo = join('/', [Url::base(), $uploadPath, $model->photo_profile]);
+            }
 
-        // } else {
+            $this->memberContent = [
+                'photo' => $photo,
+                'displayname' => $model->displayname,
+                'position' => 'HRD',
+                'employee' => 'Unilever',
+                'postDate' => $this->postDate,
+                'profileUrl' => Url::to(['/member/profile/view', 'id' => $model->username]),
+            ];
+
+        } else {
             $this->memberContent = [
                 'photo' => join('/', [Url::base(), 'public/profile/rudi-gundul.png']),
                 'displayname' => 'Muhammad adi',
@@ -45,7 +66,7 @@ class TimelineAuthor extends \yii\base\Widget
                 'employee' => 'Unilever',
                 'postDate' => '3h ago',
             ];
-        // }
+        }
     }
 
     /**
@@ -55,6 +76,7 @@ class TimelineAuthor extends \yii\base\Widget
     {
         return $this->render('timeline_author', [
             'model' => $this->memberContent,
+            'separator' => $this->separator,
         ]);
     }
 }
