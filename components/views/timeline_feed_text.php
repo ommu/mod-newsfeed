@@ -27,7 +27,7 @@ $urlAsset = UpgradidAsset::register($this);
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <?php echo $model->newsfeed_post;?>
+        <?php echo $newsfeedPost;?>
         <div class="clearfix mb-3"></div>
         <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small>8 Reaction</small></a><a href="javascript:void(0);" onclick="lastComment(this);"><small>10 Komentar</small></a>
     </div>

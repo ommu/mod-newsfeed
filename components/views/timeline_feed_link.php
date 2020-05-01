@@ -27,7 +27,8 @@ $urlAsset = UpgradidAsset::register($this);
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <p>Share link careernews dengan gambar kecil. <a href="">@juraganAyam</a> Lorem Ipsum is simply dummy text.</p>
+        <?php echo $newsfeedPost;?>
+        <div class="clearfix mb-3"></div>
         <div class="row bg-light m-0 share-cn">
             <div class="col-3 p-2">
                 <a href="" target="_blank"><img class="w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" /></a>
@@ -96,7 +97,8 @@ $urlAsset = UpgradidAsset::register($this);
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <p>Share link careernews dengan gambar besar. <a href="">@juraganAyam</a> Lorem Ipsum is simply dummy text.</p>
+        <?php echo $newsfeedPost;?>
+        <div class="clearfix mb-3"></div>
         <div class="bg-light share-cn">
             <a href="" target="_blank"><img class="w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" /></a>
             <div class="p-2">

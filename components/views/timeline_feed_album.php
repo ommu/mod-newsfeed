@@ -27,7 +27,8 @@ $urlAsset = UpgradidAsset::register($this);
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <p>Posting text with image & mention. Lorem Ipsum is <a href="">@juraganAyam</a> simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  standard dummy text</p>
+        <?php echo $newsfeedPost;?>
+        <div class="clearfix mb-3"></div>
         <img class="mb-2 w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" />
         <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small>8 Reaction</small></a><a href="javascript:void(0);" onclick="lastComment(this);"><small>10 Komentar</small></a>
     </div>
@@ -221,7 +222,8 @@ $urlAsset = UpgradidAsset::register($this);
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <p>Posting multiple image with text. <a href="">@juraganAyam</a> Lorem Ipsum is simply dummy text.</p>
+        <?php echo $newsfeedPost;?>
+        <div class="clearfix mb-3"></div>
         <!-- image size : 800 x 600 / 480 x 360 -->
         <!-- 2 image -->
         <div class="row multiimage">
