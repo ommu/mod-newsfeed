@@ -1,8 +1,8 @@
 <?php
 /**
- * TimelineFeeds
+ * TimelineAuthor
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\components\TimelineFeeds
+ * @var $this app\modules\newsfeed\components\TimelineAuthor
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

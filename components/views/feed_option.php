@@ -1,6 +1,6 @@
 <?php
 /**
- * TimelineFeeds
+ * FeedOption
  * @var $this app\components\View
  * @var $this app\modules\newsfeed\components\FeedOption
  *
