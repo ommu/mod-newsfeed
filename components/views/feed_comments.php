@@ -22,7 +22,7 @@ use app\modules\newsfeed\components\FeedCommentPost;
         $pager = $dataProvider->getPagination();
 
         $nextPager = false;
-        if ($dataProvider->totalCount > $dataProvider->count) {
+        if ($dataProvider->totalCount != 0 && $dataProvider->totalCount > $dataProvider->count) {
             $nextPager = true;
         } ?>
         <?php if ($nextPager == true) {?>

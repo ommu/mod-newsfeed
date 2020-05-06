@@ -580,13 +580,13 @@ class Newsfeeds extends \app\components\ActiveRecord
 		return true;
 	}
 
-	/**
-	 * before save attributes
-	 */
-	public function beforeSave($insert)
-	{
-		if(parent::beforeSave($insert)) {
-			// set and change mentions
+        /**
+         * before save attributes
+         */
+        public function beforeSave($insert)
+        {
+            if(parent::beforeSave($insert)) {
+                // set and change mentions
             if ($insert) {
                 $this->newsfeed_param = [];
             }
@@ -607,13 +607,13 @@ class Newsfeeds extends \app\components\ActiveRecord
         }
 
         return true;
-	}
+    }
 
-	/**
-	 * After save attributes
-	 */
-	public function afterSave($insert, $changedAttributes)
-	{
+    /**
+     * After save attributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
         parent::afterSave($insert, $changedAttributes);
 
         if($insert) {
@@ -665,5 +665,5 @@ class Newsfeeds extends \app\components\ActiveRecord
                 }
             }
         }
-	}
+    }
 }

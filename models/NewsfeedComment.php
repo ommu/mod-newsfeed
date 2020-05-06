@@ -234,4 +234,21 @@ class NewsfeedComment extends \app\components\ActiveRecord
 		}
 		return true;
 	}
+
+    /**
+     * After save attributes
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert) {
+            $this->newsfeed->updateCounters(['comments' => 1]);
+
+        } else {
+            if(array_key_exists('publish', $changedAttributes) && $changedAttributes['publish'] != $this->publish && $this->publish == 2) {
+                $this->newsfeed->updateCounters(['comments' => -1]);
+            }
+        }
+    }
 }
