@@ -43,12 +43,6 @@ $attributes = [
 		'format' => 'html',
 	],
 	[
-		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
-		'format' => 'raw',
-		'visible' => !$small,
-	],
-	[
 		'attribute' => 'userDisplayname',
 		'value' => isset($model->user) ? $model->user->displayname : '-',
 		'visible' => !$small,

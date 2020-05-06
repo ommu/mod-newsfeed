@@ -12,7 +12,6 @@
  *	View
  *	Delete
  *	RunAction
- *	Publish
  *
  *	findModel
  *
@@ -60,7 +59,6 @@ class LikeController extends Controller
 				'class' => VerbFilter::className(),
 				'actions' => [
 					'delete' => ['POST'],
-					'publish' => ['POST'],
 				],
 			],
 		];
@@ -140,24 +138,6 @@ class LikeController extends Controller
 
 		if($model->save(false, ['publish'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed like success deleted.'));
-			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
-		}
-	}
-
-	/**
-	 * actionPublish an existing NewsfeedLike model.
-	 * If publish is successful, the browser will be redirected to the 'index' page.
-	 * @param integer $id
-	 * @return mixed
-	 */
-	public function actionPublish($id)
-	{
-		$model = $this->findModel($id);
-		$replace = $model->publish == 1 ? 0 : 1;
-		$model->publish = $replace;
-
-		if($model->save(false, ['publish'])) {
-			Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed like success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
 	}

@@ -55,12 +55,6 @@ use app\components\widgets\ActiveForm;
 	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('comment_ip')); ?>
 
-<?php if($model->isNewRecord && !$model->getErrors())
-	$model->publish = 1;
-echo $form->field($model, 'publish')
-	->checkbox()
-	->label($model->getAttributeLabel('publish')); ?>
-
 <hr/>
 
 <?php echo $form->field($model, 'submitButton')
