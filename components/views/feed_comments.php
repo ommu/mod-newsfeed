@@ -27,7 +27,7 @@ use app\modules\newsfeed\components\FeedCommentPost;
         } ?>
         <?php if ($nextPager == true) {?>
             <div class="post-comment p-1 bg-light prev-comment text-center">
-                <a class="btn-sm text-primary" href="<?php echo Url::to(['/newsfeed/comment/index', 'newsfeed' => $newsfeedId, 'page' => 2]);?>"><small>See previous comment&nbsp;<i class="fas fa-chevron-down"></i></small></a>
+                <a class="btn-sm text-primary" href="<?php echo Url::to(['/newsfeed/comment/index', 'newsfeed' => $newsfeedId, 'page' => 2]);?>"><small><?php echo Yii::t('app', 'See previous comment');?>&nbsp;<i class="fas fa-chevron-down"></i></small></a>
             </div>
         <?php }
 
@@ -43,8 +43,8 @@ use app\modules\newsfeed\components\FeedCommentPost;
                     <div class="d-inline-block option-menu position-relative">
                         <a href="javascript:void(0);"><i class="fas fa-ellipsis-h"></i></a>
                         <div class="position-absolute">
-                            <a href="">Delete</a>
-                            <a href="">Block</a>
+                            <a href="<?php echo Url::to(['/newsfeed/comment/delete', 'id' => $val->id]);?>"><?php echo Yii::t('app', 'Delete');?></a>
+                            <a href=""><?php echo Yii::t('app', 'Block');?></a>
                         </div>
                     </div>
                 </div>
