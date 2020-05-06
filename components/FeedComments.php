@@ -12,12 +12,44 @@
 
 namespace app\modules\newsfeed\components;
 
+use app\modules\newsfeed\models\NewsfeedComment;
+use yii\data\ActiveDataProvider;
+
 class FeedComments extends \yii\base\Widget
 {
     /**
      * {@inheritdoc}
      */
-    public function run() {
-        return $this->render('feed_comments');
+    public $comment = false;
+    /**
+     * {@inheritdoc}
+     */
+    public $newsfeedId;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run()
+    {
+        $query = NewsfeedComment::find()
+            ->alias('t')
+            ->andWhere(['t.publish' => 1]);
+        if ($this->newsfeedId) {
+            $query->andWhere(['t.newsfeed_id' => $this->newsfeedId]);
+        }
+        $query->orderBy('t.comment_date DESC, t.id DESC');
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 2,
+            ],
+        ]);
+
+        return $this->render('feed_comments', [
+            'comment' => $this->comment,
+            'newsfeedId' => $this->newsfeedId,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

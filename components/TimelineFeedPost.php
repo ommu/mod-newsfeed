@@ -17,7 +17,8 @@ class TimelineFeedPost extends \yii\base\Widget
     /**
      * {@inheritdoc}
      */
-    public function run() {
+    public function run()
+    {
         return $this->render('timeline_feed_post');
     }
 }

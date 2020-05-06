@@ -26,8 +26,10 @@ use app\modules\newsfeed\components\FeedComments;
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <?php echo $newsfeedPost;?>
-        <div class="clearfix mb-3"></div>
+        <?php if ($newsfeedPost) {
+            echo $newsfeedPost;?>
+            <div class="clearfix mb-3"></div>
+        <?php }?>
         <div class="row bg-light m-0 share-cn">
             <div class="col-3 p-2">
                 <a href="" target="_blank"><img class="w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" /></a>
@@ -38,11 +40,14 @@ use app\modules\newsfeed\components\FeedComments;
                 <a class="text-truncate text-primary w-100" href="https://careernews.id/event/view/4987-Kalau-Kamu-Sabar-Jeli-Jemput-Karier-Impianmu-Tinggal-Selangkah-Lagi-1" target="_blank">https://careernews.id/event/view/4987-Kalau-Kamu-Sabar-Jeli-Jemput-Karier-Impianmu-Tinggal-Selangkah-Lagi-1</a>
             </div>
         </div>
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small>8 Reaction</small></a>
-        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small>0 Komentar</small></a>
+        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
+        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
     </div>
     <?php echo FeedOption::widget();?>
-    <?php echo FeedComments::widget();?>
+    <?php echo FeedComments::widget([
+        'comment' => $model->comments ? true : false,
+        'newsfeedId' => $model->id,
+    ]);?>
 </div>
 
 <!-- Type : Careernews large image -->
@@ -53,8 +58,10 @@ use app\modules\newsfeed\components\FeedComments;
     ]);?>
 
     <div class="post-text border-bottom p-2 mx-2">
-        <?php echo $newsfeedPost;?>
-        <div class="clearfix mb-3"></div>
+        <?php if ($newsfeedPost) {
+            echo $newsfeedPost;?>
+            <div class="clearfix mb-3"></div>
+        <?php }?>
         <div class="bg-light share-cn">
             <a href="" target="_blank"><img class="w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" /></a>
             <div class="p-2">
@@ -63,9 +70,12 @@ use app\modules\newsfeed\components\FeedComments;
                 <a class="text-truncate text-primary w-100" href="https://careernews.id/event/view/4987-Kalau-Kamu-Sabar-Jeli-Jemput-Karier-Impianmu-Tinggal-Selangkah-Lagi-1" target="_blank">https://careernews.id/event/view/4987-Kalau-Kamu-Sabar-Jeli-Jemput-Karier-Impianmu-Tinggal-Selangkah-Lagi-1</a>
             </div>
         </div>
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small>8 Reaction</small></a>
-        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small>0 Komentar</small></a>
+        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
+        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
     </div>
     <?php echo FeedOption::widget();?>
-    <?php echo FeedComments::widget();?>
+    <?php echo FeedComments::widget([
+        'comment' => $model->comments ? true : false,
+        'newsfeedId' => $model->id,
+    ]);?>
 </div>

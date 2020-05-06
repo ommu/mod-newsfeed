@@ -14,8 +14,8 @@
 
 use yii\helpers\Url;
 use app\themes\upgradid\assets\UpgradidAsset;
-use \app\modules\newsfeed\components\TimelineFeedPost;
-use \app\modules\newsfeed\components\TimelineFeedContent;
+use app\modules\newsfeed\components\TimelineFeedPost;
+use app\modules\newsfeed\components\TimelineFeedContent;
 use yii\widgets\Pjax;
 use app\components\widgets\ListView;
 
@@ -26,7 +26,7 @@ $urlAsset = UpgradidAsset::register($this);
 <div class="news-feed">
     <?php echo TimelineFeedPost::widget();
 
-    Pjax::begin();
+    //Pjax::begin();
 
     echo ListView::widget([
         'dataProvider' => $dataProvider,
@@ -46,7 +46,7 @@ $urlAsset = UpgradidAsset::register($this);
         },
     ]);
 
-    Pjax::end(); ?>
+    //Pjax::end(); ?>
 </div>
 <div class="loading-feed"></div>
 <div class="page-load-status p-2">

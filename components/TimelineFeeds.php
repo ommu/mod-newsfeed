@@ -18,7 +18,6 @@ use app\modules\newsfeed\models\Newsfeeds;
 
 class TimelineFeeds extends \yii\base\Widget
 {
-
     /**
      * {@inheritdoc}
      */
@@ -36,6 +35,7 @@ class TimelineFeeds extends \yii\base\Widget
                 ->alias('t')
                 ->andWhere(['t.publish' => 1])
                 ->andWhere(['t.app' => Yii::$app->id])
+                ->orderBy('t.creation_date DESC, t.id DESC')
         ]);
 
         return $this->render('timeline_feeds', [

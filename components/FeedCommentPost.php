@@ -17,7 +17,8 @@ class FeedCommentPost extends \yii\base\Widget
     /**
      * {@inheritdoc}
      */
-    public function run() {
+    public function run()
+    {
         return $this->render('feed_comment_post');
     }
 }
