@@ -27,7 +27,7 @@ use app\components\widgets\ActiveForm;
             //'enableClientScript' => false,
         ]); ?>
             <div class="input-area">
-                <?php echo Html::textarea('comment', '', ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Add comment here')]);?>
+                <?php echo Html::textarea('comment', '', ['id' => 'field-comment', 'class' => 'form-control', 'placeholder' => Yii::t('app', 'Add comment here')]);?>
                 <input type="file" name="commentimage-1-1" id="commentimage-1-1" class="input-img-comment" onchange="readURLimg(this);"/>
                 <label for="commentimage-1-1"><i class="far fa-image"></i></label>
             </div>
