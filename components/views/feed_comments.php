@@ -52,5 +52,7 @@ use app\modules\newsfeed\components\FeedCommentPost;
     <?php }
     }
 
-    echo FeedCommentPost::widget();?>
+    echo FeedCommentPost::widget([
+        'newsfeedId' => $newsfeedId,
+    ]);?>
 </div>

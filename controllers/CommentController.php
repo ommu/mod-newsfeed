@@ -33,6 +33,8 @@ use yii\data\ActiveDataProvider;
 
 class CommentController extends Controller
 {
+    public static $backoffice = false;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -86,6 +88,9 @@ class CommentController extends Controller
     public function actionCreate()
     {
         $model = new NewsfeedComment();
+        if (($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
+            $model = new NewsfeedComment(['newsfeed_id' => $newsfeed]);
+        }
 
         if(Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());

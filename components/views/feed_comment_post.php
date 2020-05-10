@@ -12,19 +12,28 @@
  *
  */
 
+use yii\helpers\Html;
 use yii\helpers\Url;
+use app\components\widgets\ActiveForm;
 ?>
 
 <div class="post-comment d-flex p-3">
     <div class="profile-photo"><a href=""><img class="rounded-circle" src="<?php echo Url::base();?>/public/profile/rudi-gundul.png" alt="rudi-gundul.png" /></a></div>
     <div class="pl-3 w-100 comment-area">
-        <div class="input-area">
-            <textarea id="comment-1-1" class="form-control" rows="1" placeholder="Add comment here"></textarea>
-            <input type="file" name="commentimage-1-1" id="commentimage-1-1" class="input-img-comment" onchange="readURLimg(this);"/>
-            <label for="commentimage-1-1"><i class="far fa-image"></i></label>
-        </div>
-        <div class="posting-btn text-right d-block mt-2">
-            <button type="submit" class="btn btn-xs btn-default text-white orange" onclick="postComment(this);">POST</button>
-        </div>
+        <?php $form = ActiveForm::begin([
+            'action' => Url::to(['/newsfeed/comment/create', 'newsfeed' => $newsfeedId]),
+            'enableClientValidation' => false,
+            'enableAjaxValidation' => false,
+            //'enableClientScript' => false,
+        ]); ?>
+            <div class="input-area">
+                <?php echo Html::textarea('comment', '', ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Add comment here')]);?>
+                <input type="file" name="commentimage-1-1" id="commentimage-1-1" class="input-img-comment" onchange="readURLimg(this);"/>
+                <label for="commentimage-1-1"><i class="far fa-image"></i></label>
+            </div>
+            <div class="posting-btn text-right d-block mt-2">
+                <button type="submit" class="btn btn-xs btn-default text-white orange" onclick="postComment(this);"><?php echo Yii::t('app', 'POST');?></button>
+            </div>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

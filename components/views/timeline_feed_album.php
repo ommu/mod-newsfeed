@@ -188,7 +188,8 @@ use app\modules\newsfeed\components\FeedComments;
             </div>
         </div>
         <br/>
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a><a href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
+        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
+        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
     </div>
     <?php echo FeedOption::widget();?>
     <?php echo FeedComments::widget([

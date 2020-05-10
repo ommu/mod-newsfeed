@@ -17,8 +17,15 @@ class FeedCommentPost extends \yii\base\Widget
     /**
      * {@inheritdoc}
      */
+    public $newsfeedId;
+
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
-        return $this->render('feed_comment_post');
+        return $this->render('feed_comment_post', [
+            'newsfeedId' => $this->newsfeedId,
+        ]);
     }
 }
