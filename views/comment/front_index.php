@@ -20,7 +20,8 @@ $model = array_reverse($dataProvider->getModels());
 $pager = $dataProvider->getPagination();
 
 $nextPager = false;
-if ($pager->pageSize == $dataProvider->count && ($dataProvider->totalCount > ($dataProvider->count * $pager->pageSize))) {
+$pageCount = $page * $pager->pageSize;
+if ($pageCount < $dataProvider->totalCount) {
     $nextPager = true;
 }
 
