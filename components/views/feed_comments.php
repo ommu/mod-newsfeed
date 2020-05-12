@@ -27,15 +27,25 @@ use app\modules\newsfeed\components\FeedCommentPost;
         } ?>
         <?php if ($nextPager == true) {?>
             <div class="post-comment p-1 bg-light prev-comment text-center">
-                <a class="btn-sm text-primary" href="<?php echo Url::to(['/newsfeed/comment/index', 'newsfeed' => $newsfeedId, 'page' => 2]);?>"><small><?php echo Yii::t('app', 'See previous comment');?>&nbsp;<i class="fas fa-chevron-down"></i></small></a>
+                <a class="btn-sm text-primary" href="<?php echo Url::to(['/newsfeed/comment/index', 'newsfeed' => $newsfeedId, 'page' => 2]);?>" title="<?php echo Yii::t('app', 'See previous comment');?>">
+                    <small><?php echo Yii::t('app', 'See previous comment');?>&nbsp;<i class="fas fa-chevron-down"></i></small>
+                </a>
             </div>
         <?php }
 
         foreach ($model as $val) {?>
             <div class="post-comment d-flex p-3">
-                <div class="profile-photo"><a href=""><img class="rounded-circle" src="<?php echo Url::base();?>/public/profile/rudi-gundul.png" alt="rudi-gundul.png" /></a></div>
+                <div class="profile-photo">
+                    <a href="<?php echo Url::to(['/member/profile/view', 'id' => $val->user->username]);?>" title="<?php echo $val->user->displayname; ?>">
+                        <img class="rounded-circle" src="<?php echo $val->user->photos; ?>" alt="<?php echo $val->user->displayname; ?>" />
+                    </a>
+                </div>
                 <div class="px-3">
-                    <h5 class="mb-1"><a href=""><strong><?php echo $val->user->displayname; ?></strong></a></h5>
+                    <h5 class="mb-1">
+                        <a href="<?php echo Url::to(['/member/profile/view', 'id' => $val->user->username]);?>" title="<?php echo $val->user->displayname; ?>">
+                            <strong><?php echo $val->user->displayname; ?></strong>
+                        </a>
+                    </h5>
                     <?php echo $val->comment; ?>
                 </div>
                 <div class="ml-auto text-muted text-nowrap option">

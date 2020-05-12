@@ -18,7 +18,11 @@ use app\components\widgets\ActiveForm;
 ?>
 
 <div class="post-comment d-flex p-3">
-    <div class="profile-photo"><a href=""><img class="rounded-circle" src="<?php echo Url::base();?>/public/profile/rudi-gundul.png" alt="rudi-gundul.png" /></a></div>
+    <div class="profile-photo">
+        <a href="<?php echo Url::to(['/member/profile/view', 'id' => Yii::$app->user->identity->username]);?>" title="<?php echo Yii::$app->user->identity->displayname;?>">
+            <img class="rounded-circle" src="<?php echo Yii::$app->user->identity->photos;?>" alt="<?php echo Yii::$app->user->identity->displayname;?>" />
+        </a>
+    </div>
     <div class="pl-3 w-100 comment-area">
         <?php $form = ActiveForm::begin([
             'action' => Url::to(['/newsfeed/comment/create', 'newsfeed' => $newsfeedId]),
