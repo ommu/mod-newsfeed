@@ -31,7 +31,7 @@ namespace app\modules\newsfeed\models;
 
 use Yii;
 use yii\helpers\Url;
-use ommu\users\models\Users;
+use app\models\Users;
 
 class NewsfeedComment extends \app\components\ActiveRecord
 {

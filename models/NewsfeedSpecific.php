@@ -25,7 +25,7 @@
 namespace app\modules\newsfeed\models;
 
 use Yii;
-use ommu\users\models\Users;
+use app\models\Users;
 
 class NewsfeedSpecific extends \app\components\ActiveRecord
 {
