@@ -11,7 +11,7 @@
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 21 April 2020, 23:27 WIB
+ * @created date 10 January 2020, 23:27 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
  */

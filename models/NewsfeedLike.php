@@ -207,6 +207,27 @@ class NewsfeedLike extends \app\components\ActiveRecord
 		}
 	}
 
+    /**
+     * function getLikeReact
+     */
+    public static function getLikeReact($value=null)
+    {
+        $items = array(
+            '1' => Yii::t('app', 'Like'),
+            '2' => Yii::t('app', 'Happy'),
+            '3' => Yii::t('app', 'Laugh'),
+            '4' => Yii::t('app', 'Angry'),
+            '5' => Yii::t('app', 'Sad'),
+            '6' => Yii::t('app', 'Shock'),
+        );
+
+        if($value !== null) {
+            return $items[$value];
+        } else {
+            return $items;
+        }
+    }
+
 	/**
 	 * after find attributes
 	 */
