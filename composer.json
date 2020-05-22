@@ -1,0 +1,41 @@
+{
+	"name": "ommu/newsfeed",
+	"description": "Newsfeed Module from OMMU",
+	"type": "ommu-module",
+	"keywords": [
+		"module",
+		"newsfeed",
+		"timeline",
+		"ommu",
+		"ommu-platform",
+		"yii2"
+	],
+	"license": "Apache-2.0",
+	"homepage": "https://github.com/ommu/mod-newsfeed",
+	"support": {
+		"issues": "https://github.com/ommu/mod-newsfeed/issues",
+		"wiki": "https://github.com/ommu/mod-newsfeed/wiki",
+		"source": "https://github.com/ommu/mod-newsfeed"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ommu/mod-newsfeed.git"
+	},
+	"authors": [
+		{
+			"name": "Putra Sudaryanto",
+			"email": "putra@ommu.id",
+			"homepage": "https://ommu.id",
+			"role": "Creator"
+		}
+	],
+	"require": {
+		"php": "~7.0",
+		"yiisoft/yii2": "~2.0.13"
+	},
+	"autoload": {
+		"psr-4": {
+			"ommu\\newsfeed\\": ""
+		}
+	}
+}
