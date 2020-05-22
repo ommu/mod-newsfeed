@@ -81,11 +81,11 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publish', 'app', 'member_id', 'user_id', 'privacy', 'newsfeed_post'], 'required'],
+			[['publish', 'app', 'member_id', 'user_id', 'privacy'], 'required'],
 			[['publish', 'member_id', 'user_id', 'privacy', 'likes', 'comments', 'creation_id', 'modified_id', 'updated_id'], 'integer'],
 			[['newsfeed_type', 'newsfeed_post'], 'string'],
 			//[['newsfeed_param'], 'json'],
-			[['newsfeed_type', 'newsfeed_param'], 'safe'],
+			[['newsfeed_type', 'newsfeed_post', 'newsfeed_param'], 'safe'],
 			[['newsfeed_type'], 'string', 'max' => 16],
 			[['app'], 'string', 'max' => 32],
 		];
@@ -587,7 +587,7 @@ class Newsfeeds extends \app\components\ActiveRecord
         {
             if(parent::beforeSave($insert)) {
                 // set and change mentions
-            if ($insert) {
+            if ($insert && !is_array($this->newsfeed_param)) {
                 $this->newsfeed_param = [];
             }
 

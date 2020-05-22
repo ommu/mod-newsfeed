@@ -13,9 +13,11 @@
  */
 
 use yii\helpers\Url;
+use yii\helpers\Html;
 use app\modules\newsfeed\components\TimelineAuthor;
 use app\modules\newsfeed\components\FeedOption;
 use app\modules\newsfeed\components\FeedComments;
+use app\modules\album\models\Photos;
 ?>
 
 <!-- Type : Post mention image -->
@@ -29,167 +31,73 @@ use app\modules\newsfeed\components\FeedComments;
         <?php if ($newsfeedPost) {
             echo $newsfeedPost;?>
             <div class="clearfix mb-3"></div>
-        <?php }?>
-        <img class="mb-2 w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" />
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
-        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
-    </div>
-    <?php echo FeedOption::widget();?>
-    <?php echo FeedComments::widget([
-        'comment' => $model->comments ? true : false,
-        'newsfeedId' => $model->id,
-    ]);?>
-</div>
+        <?php }
 
-<!-- Type : Post image -->
-<div id="posting-2" class="post-content box-shadow bg-white rounded mb-4">
-    <?php echo TimelineAuthor::widget([
-        'model' => $member,
-        'postDate' => $model->creation_date,
-    ]);?>
+        $photos = 0;
+        if (isset($model->newsfeed_param['content'])) {
+            $photos = count($model->newsfeed_param['content']);
+        }
+        
+        if ($photos == 1) {
+            foreach ($model->newsfeed_param['content'] as $key => $photo) {
+                echo Html::img(join('/', ['@webpublic', $photo['photo']]), ['alt' => $photo['photo'], 'class' => 'mb-2 w-100']);
 
-    <div class="post-text border-bottom p-2 mx-2">
-        <img class="mb-2 w-100" src="<?php echo Url::base();?>/public/article/media/1508825782_articles-2.jpg" alt="1508825782_articles-2.jpg" />
-        <p>Posting image with text. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  standard dummy text</p>
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
-        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
-    </div>
-    <?php echo FeedOption::widget();?>
-    <?php echo FeedComments::widget([
-        'comment' => $model->comments ? true : false,
-        'newsfeedId' => $model->id,
-    ]);?>
-</div>
+                $item = Photos::getInfo($photo['photo_id'], ['title', 'caption']);
+                $titleCondition = false;
+                if ($item->title || $item->caption) {
+                    $titleCondition = true;
+                }
+                if ($titleCondition) {
+                    echo $item->title ? $item->title : '';
+                    echo $item->caption ? ($item->title ? '<br/>' : '').$item->caption : '';?>
+                    <div class="clearfix mb-3"></div>
+                <?php }
+            } ?>
 
-<!-- Type : Post multiple image -->
-<div id="posting-3" class="post-content box-shadow bg-white rounded mb-4">
-    <?php echo TimelineAuthor::widget([
-        'model' => $member,
-        'postDate' => $model->creation_date,
-    ]);?>
+        <?php } else if ($photos > 1) {
+            $i = 0;
+            foreach ($model->newsfeed_param['content'] as $key => $photo) {
+                $i++;
+                if ($photos >= 5 && $i > 5) {
+                    continue;
+                }
 
-    <div class="post-text border-bottom p-2 mx-2">
-        <?php if ($newsfeedPost) {
-            echo $newsfeedPost;?>
+                if ($i == 1 || ($photos >= 5 && $i == 3)) {?>
+                <div class="row multiimage">
+                <?php }
+
+                if ($photos == 2 || ($photos == 4 && in_array($i, [1,3])) || ($photos >= 5 && in_array($i, [1,2]))) {?>
+                <div class="col-6 p-0">
+                <?php }
+                if ($photos == 3 && $i == 1) {?>
+                <div class="col-8 p-0">
+                <?php }
+                if (($photos == 3 && $i == 2)  || ($photos >= 5 && $i > 2)) {?>
+                <div class="col-4 p-0 <?php echo $photos > 5 && $i == 5 ? 'moreimages' : ''?>">
+                <?php }
+
+                $image = Html::img(join('/', ['@webpublic', $photo['photo']]), ['alt' => $photo['photo'], 'class' => 'w-100']);
+                if ($photos > 5 && $i == 5) {
+                    $image = '<span><span>+'.($photos - 5).'</span></span>'.$image;
+                }
+                echo Html::a($image, '');
+
+                if ($photos == 2 || ($photos == 3 && $i != 2) || ($photos == 4 && in_array($i, [2,4])) || $photos >= 5) {?>
+                </div>
+                <?php }
+
+                if (($photos <= 5 && $i == $photos) || ($photos == 5 && $i == 2) || ($photos > 5 && in_array($i, [2,5]))) {?>
+                </div>
+                <?php }?>
+            <?php }?>
             <div class="clearfix mb-3"></div>
-        <?php }?>
-        <!-- image size : 800 x 600 / 480 x 360 -->
-        <!-- 2 image -->
-        <div class="row multiimage">
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-        </div>
-        <br/>
-        <!-- 3 image -->
-        <div class="row multiimage">
-            <div class="col-8 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-3.jpg" alt="event-banner-3.jpg" />
-                </a>
-            </div>
-        </div>
-        <br/>
-        <!-- 4 image -->
-        <div class="row multiimage">
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-3.jpg" alt="event-banner-3.jpg" />
-                </a>
-            </div>
-        </div>
-        <br/>
-        <!-- 5 image -->
-        <div class="row multiimage">
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-        </div>
-        <div class="row multiimage">
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-3.jpg" alt="event-banner-3.jpg" />
-                </a>
-            </div>
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-        </div>
-        <br/>
-        <!-- more than 5 image -->
-        <div class="row multiimage">
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-            <div class="col-6 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-        </div>
-        <div class="row multiimage">
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-2.jpg" alt="event-banner-2.jpg" />
-                </a>
-            </div>
-            <div class="col-4 p-0">
-                <a href="">
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-3.jpg" alt="event-banner-3.jpg" />
-                </a>
-            </div>
-            <div class="col-4 p-0 moreimages">
-                <a href="">
-                    <span><span>+3</span></span>
-                    <img class="w-100" src="<?php echo Url::base();?>/public/event/event-banner-1.jpg" alt="event-banner-1.jpg" />
-                </a>
-            </div>
-        </div>
-        <br/>
-        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike"><small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small></a>
-        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);"><small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small></a>
+        <?php } ?>
+        <a class="modal-btn mr-2 text-muted" data-target="#modallike" href="<?php echo Url::base();?>/newsfeed/site/postlike" title="<?php echo Yii::t('app', 'Reaction');?>">
+            <small><?php echo Yii::t('app', '{react} Reaction', ['react' => $model->likes]);?></small>
+        </a>
+        <a class="text-muted" href="javascript:void(0);" onclick="lastComment(this);" title="<?php echo Yii::t('app', 'Comment');?>">
+            <small><?php echo Yii::t('app', '{comment} Comment', ['comment' => $model->comments]);?></small>
+        </a>
     </div>
     <?php echo FeedOption::widget();?>
     <?php echo FeedComments::widget([

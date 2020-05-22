@@ -22,8 +22,8 @@ $urlAsset = UpgradidAsset::register($this);
     <div class="option-menu emoticons top position-relative">
         <a href="javascript:void(0);"><img class="align-self-center" src="<?php echo $urlAsset->baseUrl;?>/images/icons/emoticon.png" alt="emoticon.png" /></a>
         <div class="position-absolute rounded">
-            <a href="" class="emot-happy"></a>
             <a href="" class="emot-like"></a>
+            <a href="" class="emot-happy"></a>
             <a href="" class="emot-laugh"></a>
             <a href="" class="emot-angry"></a>
             <a href="" class="emot-sad"></a>

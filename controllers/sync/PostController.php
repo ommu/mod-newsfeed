@@ -67,7 +67,7 @@ class PostController extends Controller
 		$model->app = Yii::$app->id;
 		$model->member_id = 2165;
 		$model->user_id = 6;
-		$model->privacy = 1;
+		$model->privacy = 5;
 
         // if basic + mentions
 		// $model->newsfeed_post = 'hi, kamu..';
