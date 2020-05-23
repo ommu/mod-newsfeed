@@ -2,8 +2,8 @@
 /**
  * Newsfeed Specifics (newsfeed-specific)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\SpecificController
- * @var $model app\modules\newsfeed\models\NewsfeedSpecific
+ * @var $this ommu\newsfeed\controllers\admin\SpecificController
+ * @var $model ommu\newsfeed\models\NewsfeedSpecific
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

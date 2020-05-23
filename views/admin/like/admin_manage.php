@@ -2,9 +2,9 @@
 /**
  * Newsfeed Likes (newsfeed-like)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\NewsfeedLike
- * @var $searchModel app\modules\newsfeed\models\search\NewsfeedLike
+ * @var $this ommu\newsfeed\controllers\admin\LikeController
+ * @var $model ommu\newsfeed\models\NewsfeedLike
+ * @var $searchModel ommu\newsfeed\models\search\NewsfeedLike
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

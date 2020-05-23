@@ -2,8 +2,8 @@
 /**
  * Newsfeed Comments (newsfeed-comment)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\CommentController
- * @var $model app\modules\newsfeed\models\NewsfeedComment
+ * @var $this ommu\newsfeed\controllers\admin\CommentController
+ * @var $model ommu\newsfeed\models\NewsfeedComment
  * @var $form app\components\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>

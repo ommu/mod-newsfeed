@@ -12,5 +12,5 @@
 
 return [
 	'id' => 'newsfeed',
-	'class' => app\modules\newsfeed\Module::className(),
+	'class' => ommu\newsfeed\Module::className(),
 ];

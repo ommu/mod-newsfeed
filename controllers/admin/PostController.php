@@ -1,8 +1,8 @@
 <?php
 /**
  * PostController
- * @var $this app\modules\newsfeed\controllers\admin\PostController
- * @var $model app\modules\newsfeed\models\Newsfeeds
+ * @var $this ommu\newsfeed\controllers\admin\PostController
+ * @var $model ommu\newsfeed\models\Newsfeeds
  *
  * PostController implements the CRUD actions for Newsfeeds model.
  * Reference start
@@ -25,14 +25,14 @@
  *
  */
 
-namespace app\modules\newsfeed\controllers\admin;
+namespace ommu\newsfeed\controllers\admin;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\Newsfeeds;
-use app\modules\newsfeed\models\search\Newsfeeds as NewsfeedsSearch;
+use ommu\newsfeed\models\Newsfeeds;
+use ommu\newsfeed\models\search\Newsfeeds as NewsfeedsSearch;
 
 class PostController extends Controller
 {

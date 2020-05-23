@@ -27,7 +27,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models;
+namespace ommu\newsfeed\models;
 
 use Yii;
 use yii\helpers\Url;
@@ -110,11 +110,11 @@ class NewsfeedComment extends \app\components\ActiveRecord
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\query\NewsfeedComment the active query used by this AR class.
+	 * @return \ommu\newsfeed\models\query\NewsfeedComment the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		return new \app\modules\newsfeed\models\query\NewsfeedComment(get_called_class());
+		return new \ommu\newsfeed\models\query\NewsfeedComment(get_called_class());
 	}
 
 	/**

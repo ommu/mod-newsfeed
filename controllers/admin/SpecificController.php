@@ -1,8 +1,8 @@
 <?php
 /**
  * SpecificController
- * @var $this app\modules\newsfeed\controllers\admin\SpecificController
- * @var $model app\modules\newsfeed\models\NewsfeedSpecific
+ * @var $this ommu\newsfeed\controllers\admin\SpecificController
+ * @var $model ommu\newsfeed\models\NewsfeedSpecific
  *
  * SpecificController implements the CRUD actions for NewsfeedSpecific model.
  * Reference start
@@ -22,14 +22,14 @@
  *
  */
 
-namespace app\modules\newsfeed\controllers\admin;
+namespace ommu\newsfeed\controllers\admin;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\NewsfeedSpecific;
-use app\modules\newsfeed\models\search\NewsfeedSpecific as NewsfeedSpecificSearch;
+use ommu\newsfeed\models\NewsfeedSpecific;
+use ommu\newsfeed\models\search\NewsfeedSpecific as NewsfeedSpecificSearch;
 
 class SpecificController extends Controller
 {
@@ -92,7 +92,7 @@ class SpecificController extends Controller
 
         if(($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
             $this->subMenuParam = $newsfeed;
-            $newsfeed = \app\modules\newsfeed\models\Newsfeeds::findOne($newsfeed);
+            $newsfeed = \ommu\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
 
 		$this->view->title = Yii::t('app', 'Specifics');

@@ -2,8 +2,8 @@
 /**
  * Newsfeeds
  *
- * This is the ActiveQuery class for [[\app\modules\newsfeed\models\Newsfeeds]].
- * @see \app\modules\newsfeed\models\Newsfeeds
+ * This is the ActiveQuery class for [[\ommu\newsfeed\models\Newsfeeds]].
+ * @see \ommu\newsfeed\models\Newsfeeds
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -13,7 +13,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models\query;
+namespace ommu\newsfeed\models\query;
 
 class Newsfeeds extends \yii\db\ActiveQuery
 {
@@ -50,7 +50,7 @@ class Newsfeeds extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\Newsfeeds[]|array
+	 * @return \ommu\newsfeed\models\Newsfeeds[]|array
 	 */
 	public function all($db = null)
 	{
@@ -59,7 +59,7 @@ class Newsfeeds extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\Newsfeeds|array|null
+	 * @return \ommu\newsfeed\models\Newsfeeds|array|null
 	 */
 	public function one($db = null)
 	{

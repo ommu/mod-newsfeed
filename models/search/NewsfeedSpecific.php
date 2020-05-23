@@ -2,7 +2,7 @@
 /**
  * NewsfeedSpecific
  *
- * NewsfeedSpecific represents the model behind the search form about `app\modules\newsfeed\models\NewsfeedSpecific`.
+ * NewsfeedSpecific represents the model behind the search form about `ommu\newsfeed\models\NewsfeedSpecific`.
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -12,12 +12,12 @@
  *
  */
 
-namespace app\modules\newsfeed\models\search;
+namespace ommu\newsfeed\models\search;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\newsfeed\models\NewsfeedSpecific as NewsfeedSpecificModel;
+use ommu\newsfeed\models\NewsfeedSpecific as NewsfeedSpecificModel;
 
 class NewsfeedSpecific extends NewsfeedSpecificModel
 {

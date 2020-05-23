@@ -2,8 +2,8 @@
 /**
  * NewsfeedComment
  *
- * This is the ActiveQuery class for [[\app\modules\newsfeed\models\NewsfeedComment]].
- * @see \app\modules\newsfeed\models\NewsfeedComment
+ * This is the ActiveQuery class for [[\ommu\newsfeed\models\NewsfeedComment]].
+ * @see \ommu\newsfeed\models\NewsfeedComment
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -13,7 +13,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models\query;
+namespace ommu\newsfeed\models\query;
 
 class NewsfeedComment extends \yii\db\ActiveQuery
 {
@@ -50,7 +50,7 @@ class NewsfeedComment extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedComment[]|array
+	 * @return \ommu\newsfeed\models\NewsfeedComment[]|array
 	 */
 	public function all($db = null)
 	{
@@ -59,7 +59,7 @@ class NewsfeedComment extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedComment|array|null
+	 * @return \ommu\newsfeed\models\NewsfeedComment|array|null
 	 */
 	public function one($db = null)
 	{

@@ -2,8 +2,8 @@
 /**
  * Newsfeed Likes (newsfeed-like)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\search\NewsfeedLike
+ * @var $this ommu\newsfeed\controllers\admin\LikeController
+ * @var $model ommu\newsfeed\models\search\NewsfeedLike
  * @var $form yii\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>

@@ -1,8 +1,8 @@
 <?php
 /**
  * MentionController
- * @var $this app\modules\newsfeed\controllers\admin\MentionController
- * @var $model app\modules\newsfeed\models\NewsfeedMention
+ * @var $this ommu\newsfeed\controllers\admin\MentionController
+ * @var $model ommu\newsfeed\models\NewsfeedMention
  *
  * MentionController implements the CRUD actions for NewsfeedMention model.
  * Reference start
@@ -24,14 +24,14 @@
  *
  */
 
-namespace app\modules\newsfeed\controllers\admin;
+namespace ommu\newsfeed\controllers\admin;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\NewsfeedMention;
-use app\modules\newsfeed\models\search\NewsfeedMention as NewsfeedMentionSearch;
+use ommu\newsfeed\models\NewsfeedMention;
+use ommu\newsfeed\models\search\NewsfeedMention as NewsfeedMentionSearch;
 
 class MentionController extends Controller
 {
@@ -95,7 +95,7 @@ class MentionController extends Controller
 
         if(($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
             $this->subMenuParam = $newsfeed;
-            $newsfeed = \app\modules\newsfeed\models\Newsfeeds::findOne($newsfeed);
+            $newsfeed = \ommu\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
 
 		$this->view->title = Yii::t('app', 'Mentions');

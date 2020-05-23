@@ -1,8 +1,8 @@
 <?php
 /**
  * LikeController
- * @var $this app\modules\newsfeed\controllers\admin\LikeController
- * @var $model app\modules\newsfeed\models\NewsfeedLike
+ * @var $this ommu\newsfeed\controllers\admin\LikeController
+ * @var $model ommu\newsfeed\models\NewsfeedLike
  *
  * LikeController implements the CRUD actions for NewsfeedLike model.
  * Reference start
@@ -23,14 +23,14 @@
  *
  */
 
-namespace app\modules\newsfeed\controllers\admin;
+namespace ommu\newsfeed\controllers\admin;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\NewsfeedLike;
-use app\modules\newsfeed\models\search\NewsfeedLike as NewsfeedLikeSearch;
+use ommu\newsfeed\models\NewsfeedLike;
+use ommu\newsfeed\models\search\NewsfeedLike as NewsfeedLikeSearch;
 
 class LikeController extends Controller
 {
@@ -93,7 +93,7 @@ class LikeController extends Controller
 
         if(($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
             $this->subMenuParam = $newsfeed;
-            $newsfeed = \app\modules\newsfeed\models\Newsfeeds::findOne($newsfeed);
+            $newsfeed = \ommu\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
 
 		$this->view->title = Yii::t('app', 'Likes');

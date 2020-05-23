@@ -1,8 +1,8 @@
 <?php
 /**
  * CommentController
- * @var $this app\modules\newsfeed\controllers\admin\CommentController
- * @var $model app\modules\newsfeed\models\NewsfeedComment
+ * @var $this ommu\newsfeed\controllers\admin\CommentController
+ * @var $model ommu\newsfeed\models\NewsfeedComment
  *
  * CommentController implements the CRUD actions for NewsfeedComment model.
  * Reference start
@@ -24,14 +24,14 @@
  *
  */
 
-namespace app\modules\newsfeed\controllers\admin;
+namespace ommu\newsfeed\controllers\admin;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use app\modules\newsfeed\models\NewsfeedComment;
-use app\modules\newsfeed\models\search\NewsfeedComment as NewsfeedCommentSearch;
+use ommu\newsfeed\models\NewsfeedComment;
+use ommu\newsfeed\models\search\NewsfeedComment as NewsfeedCommentSearch;
 
 class CommentController extends Controller
 {
@@ -94,7 +94,7 @@ class CommentController extends Controller
 
         if(($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
             $this->subMenuParam = $newsfeed;
-            $newsfeed = \app\modules\newsfeed\models\Newsfeeds::findOne($newsfeed);
+            $newsfeed = \ommu\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
 
 		$this->view->title = Yii::t('app', 'Comments');

@@ -22,7 +22,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models;
+namespace ommu\newsfeed\models;
 
 use Yii;
 use app\models\Users;
@@ -89,11 +89,11 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\query\NewsfeedSpecific the active query used by this AR class.
+	 * @return \ommu\newsfeed\models\query\NewsfeedSpecific the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		return new \app\modules\newsfeed\models\query\NewsfeedSpecific(get_called_class());
+		return new \ommu\newsfeed\models\query\NewsfeedSpecific(get_called_class());
 	}
 
 	/**

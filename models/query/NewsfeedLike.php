@@ -2,8 +2,8 @@
 /**
  * NewsfeedLike
  *
- * This is the ActiveQuery class for [[\app\modules\newsfeed\models\NewsfeedLike]].
- * @see \app\modules\newsfeed\models\NewsfeedLike
+ * This is the ActiveQuery class for [[\ommu\newsfeed\models\NewsfeedLike]].
+ * @see \ommu\newsfeed\models\NewsfeedLike
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -13,7 +13,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models\query;
+namespace ommu\newsfeed\models\query;
 
 class NewsfeedLike extends \yii\db\ActiveQuery
 {
@@ -50,7 +50,7 @@ class NewsfeedLike extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedLike[]|array
+	 * @return \ommu\newsfeed\models\NewsfeedLike[]|array
 	 */
 	public function all($db = null)
 	{
@@ -59,7 +59,7 @@ class NewsfeedLike extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedLike|array|null
+	 * @return \ommu\newsfeed\models\NewsfeedLike|array|null
 	 */
 	public function one($db = null)
 	{

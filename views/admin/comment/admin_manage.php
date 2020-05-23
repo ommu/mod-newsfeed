@@ -2,9 +2,9 @@
 /**
  * Newsfeed Comments (newsfeed-comment)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\CommentController
- * @var $model app\modules\newsfeed\models\NewsfeedComment
- * @var $searchModel app\modules\newsfeed\models\search\NewsfeedComment
+ * @var $this ommu\newsfeed\controllers\admin\CommentController
+ * @var $model ommu\newsfeed\models\NewsfeedComment
+ * @var $searchModel ommu\newsfeed\models\search\NewsfeedComment
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

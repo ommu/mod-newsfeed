@@ -2,8 +2,8 @@
 /**
  * Newsfeed Mentions (newsfeed-mention)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\MentionController
- * @var $model app\modules\newsfeed\models\search\NewsfeedMention
+ * @var $this ommu\newsfeed\controllers\admin\MentionController
+ * @var $model ommu\newsfeed\models\search\NewsfeedMention
  * @var $form yii\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>

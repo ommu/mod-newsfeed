@@ -2,9 +2,9 @@
 /**
  * Newsfeed Mentions (newsfeed-mention)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\MentionController
- * @var $model app\modules\newsfeed\models\NewsfeedMention
- * @var $searchModel app\modules\newsfeed\models\search\NewsfeedMention
+ * @var $this ommu\newsfeed\controllers\admin\MentionController
+ * @var $model ommu\newsfeed\models\NewsfeedMention
+ * @var $searchModel ommu\newsfeed\models\search\NewsfeedMention
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

@@ -10,7 +10,7 @@
  *
  */
 
-namespace app\modules\newsfeed;
+namespace ommu\newsfeed;
 
 use Yii;
 
@@ -21,7 +21,7 @@ class Module extends \app\components\Module
 	/**
 	 * {@inheritdoc}
 	 */
-	public $controllerNamespace = 'app\modules\newsfeed\controllers';
+	public $controllerNamespace = 'ommu\newsfeed\controllers';
 
 	/**
 	 * {@inheritdoc}

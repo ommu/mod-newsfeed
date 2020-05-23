@@ -43,7 +43,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models;
+namespace ommu\newsfeed\models;
 
 use Yii;
 use yii\helpers\Html;
@@ -59,6 +59,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 
     public $gridForbiddenColumn = ['app', 'privacy', 'newsfeed_param', 'likes', 'comments', 'mentions', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date', 'updatedDisplayname', 'specifics'];
 
+    public $sync = false;
     public $mentions = [];
     public $oldMentions = [];
 
@@ -255,11 +256,11 @@ class Newsfeeds extends \app\components\ActiveRecord
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\query\Newsfeeds the active query used by this AR class.
+	 * @return \ommu\newsfeed\models\query\Newsfeeds the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		return new \app\modules\newsfeed\models\query\Newsfeeds(get_called_class());
+		return new \ommu\newsfeed\models\query\Newsfeeds(get_called_class());
 	}
 
 	/**

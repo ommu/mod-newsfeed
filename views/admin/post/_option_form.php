@@ -2,8 +2,8 @@
 /**
  * Newsfeeds (newsfeeds)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\PostController
- * @var $model app\modules\newsfeed\models\search\Newsfeeds
+ * @var $this ommu\newsfeed\controllers\admin\PostController
+ * @var $model ommu\newsfeed\models\search\Newsfeeds
  * @var $form yii\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>

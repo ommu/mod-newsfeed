@@ -2,8 +2,8 @@
 /**
  * Newsfeeds (newsfeeds)
  * @var $this app\components\View
- * @var $this app\modules\newsfeed\controllers\admin\PostController
- * @var $model app\modules\newsfeed\models\Newsfeeds
+ * @var $this ommu\newsfeed\controllers\admin\PostController
+ * @var $model ommu\newsfeed\models\Newsfeeds
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114

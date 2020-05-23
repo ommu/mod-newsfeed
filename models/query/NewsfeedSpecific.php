@@ -2,8 +2,8 @@
 /**
  * NewsfeedSpecific
  *
- * This is the ActiveQuery class for [[\app\modules\newsfeed\models\NewsfeedSpecific]].
- * @see \app\modules\newsfeed\models\NewsfeedSpecific
+ * This is the ActiveQuery class for [[\ommu\newsfeed\models\NewsfeedSpecific]].
+ * @see \ommu\newsfeed\models\NewsfeedSpecific
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
@@ -13,7 +13,7 @@
  *
  */
 
-namespace app\modules\newsfeed\models\query;
+namespace ommu\newsfeed\models\query;
 
 class NewsfeedSpecific extends \yii\db\ActiveQuery
 {
@@ -26,7 +26,7 @@ class NewsfeedSpecific extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedSpecific[]|array
+	 * @return \ommu\newsfeed\models\NewsfeedSpecific[]|array
 	 */
 	public function all($db = null)
 	{
@@ -35,7 +35,7 @@ class NewsfeedSpecific extends \yii\db\ActiveQuery
 
 	/**
 	 * {@inheritdoc}
-	 * @return \app\modules\newsfeed\models\NewsfeedSpecific|array|null
+	 * @return \ommu\newsfeed\models\NewsfeedSpecific|array|null
 	 */
 	public function one($db = null)
 	{
