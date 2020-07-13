@@ -23,6 +23,12 @@ newsfeed_submenu:
       0: 'admin/mention/manage'
       newsfeed: $_GET*newsfeed
     select: controller
+  tag:
+    label: Tag(s)
+    url:
+      0: 'admin/tag/manage'
+      newsfeed: $_GET*newsfeed
+    select: controller
   comment:
     label: Comment(s)
     url:

@@ -83,13 +83,37 @@ $attributes = [
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'likes',
-		'value' => $model->likes ? $model->likes : '-',
+		'attribute' => 'comments',
+		'value' => function ($model) {
+			return Html::a($model->comments, ['comment/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} comments', ['count'=>$comments])]);
+		},
+		'format' => 'html',
 		'visible' => !$small,
 	],
 	[
-		'attribute' => 'comments',
-		'value' => $model->comments ? $model->comments : '-',
+		'attribute' => 'likes',
+		'value' => function ($model) {
+			return Html::a($model->likes, ['like/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} likes', ['count'=>$likes])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'mentions',
+		'value' => function ($model) {
+			$mentions = $model->getMentions(true);
+			return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions])]);
+		},
+		'format' => 'html',
+		'visible' => !$small,
+	],
+	[
+		'attribute' => 'specifics',
+		'value' => function ($model) {
+			$specifics = $model->getSpecifics(true);
+			return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics])]);
+		},
+		'format' => 'html',
 		'visible' => !$small,
 	],
 	[
@@ -120,42 +144,6 @@ $attributes = [
 	[
 		'attribute' => 'updatedDisplayname',
 		'value' => isset($model->updated) ? $model->updated->displayname : '-',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'comments',
-		'value' => function ($model) {
-			$comments = $model->getComments(true);
-			return Html::a($comments, ['comment/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} comments', ['count'=>$comments])]);
-		},
-		'format' => 'html',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'likes',
-		'value' => function ($model) {
-			$likes = $model->getLikes(true);
-			return Html::a($likes, ['like/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} likes', ['count'=>$likes])]);
-		},
-		'format' => 'html',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'mentions',
-		'value' => function ($model) {
-			$mentions = $model->getMentions(true);
-			return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions])]);
-		},
-		'format' => 'html',
-		'visible' => !$small,
-	],
-	[
-		'attribute' => 'specifics',
-		'value' => function ($model) {
-			$specifics = $model->getSpecifics(true);
-			return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics])]);
-		},
-		'format' => 'html',
 		'visible' => !$small,
 	],
 	[
