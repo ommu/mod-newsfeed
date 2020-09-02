@@ -658,11 +658,13 @@ class Newsfeeds extends \app\components\ActiveRecord
             // drop difference mentions
             if(!empty($oldMentions)) {
                 foreach ($oldMentions as $key => $val) {
-                    NewsfeedMention::find()
+                    $data = NewsfeedMention::find()
                         ->select(['id'])
                         ->where(['newsfeed_id'=>$this->id, 'member_id'=>$val['member_id']])
-                        ->one()
-                        ->delete();
+                        ->one();
+                    if ($data) {
+                        $data->delete();
+                    }
                 }
             }
         }
