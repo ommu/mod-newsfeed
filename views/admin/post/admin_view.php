@@ -18,7 +18,7 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\helpers\Json;
 
-if(!$small) {
+if (!$small) {
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Newsfeeds'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $model->id;
 } ?>
@@ -62,8 +62,9 @@ $attributes = [
 	[
 		'attribute' => 'privacy',
 		'value' => function ($model) {
-			if(!$model->privacy)
-				return '-';
+            if (!$model->privacy) {
+                return '-';
+            }
 			return $model::getPrivacy($model->privacy);
 		},
 		'visible' => !$small,

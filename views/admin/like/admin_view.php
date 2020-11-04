@@ -18,13 +18,13 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Likes'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->newsfeed->id;
+if (!$small) {
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Likes'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $model->newsfeed->id;
 
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->newsfeed_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
+    $this->params['menu']['content'] = [
+        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->newsfeed_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+    ];
 } ?>
 
 <div class="newsfeed-like-view">
@@ -35,8 +35,9 @@ $attributes = [
 		'attribute' => 'newsfeed_id',
 		'value' => function ($model) {
 			$newsfeed_id = isset($model->newsfeed) ? $model->newsfeed->id : '-';
-			if($newsfeed_id != '-')
-				return Html::a($newsfeed_id, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeed_id, 'class'=>'modal-btn']);
+            if ($newsfeed_id != '-') {
+                return Html::a($newsfeed_id, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeed_id, 'class'=>'modal-btn']);
+            }
 			return $newsfeed_id;
 		},
 		'format' => 'html',

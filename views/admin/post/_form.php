@@ -70,8 +70,10 @@ use app\components\widgets\ActiveForm;
 	->dropDownList($model::getPrivacy(), ['prompt'=>''])
 	->label($model->getAttributeLabel('privacy')); ?>
 
-<?php if($model->isNewRecord && !$model->getErrors())
-	$model->publish = 1;
+<?php 
+if ($model->isNewRecord && !$model->getErrors()) {
+    $model->publish = 1;
+}
 echo $form->field($model, 'publish')
 	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>

@@ -131,20 +131,22 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public function getComments($count=false, $publish=1)
 	{
-		if($count == false)
-			return $this->hasMany(NewsfeedComment::className(), ['newsfeed_id' => 'id'])
-			->alias('comments')
-			->andOnCondition([sprintf('%s.publish', 'comments') => $publish]);
+        if ($count == false) {
+            return $this->hasMany(NewsfeedComment::className(), ['newsfeed_id' => 'id'])
+                ->alias('comments')
+                ->andOnCondition([sprintf('%s.publish', 'comments') => $publish]);
+        }
 
 		$model = NewsfeedComment::find()
-			->alias('t')
-			->where(['newsfeed_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['newsfeed_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 		$comments = $model->count();
 
 		return $comments ? $comments : 0;
@@ -155,20 +157,22 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public function getLikes($count=false, $publish=1)
 	{
-		if($count == false)
-			return $this->hasMany(NewsfeedLike::className(), ['newsfeed_id' => 'id'])
-			->alias('likes')
-			->andOnCondition([sprintf('%s.publish', 'likes') => $publish]);
+        if ($count == false) {
+            return $this->hasMany(NewsfeedLike::className(), ['newsfeed_id' => 'id'])
+                ->alias('likes')
+                ->andOnCondition([sprintf('%s.publish', 'likes') => $publish]);
+        }
 
 		$model = NewsfeedLike::find()
-			->alias('t')
-			->where(['newsfeed_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['newsfeed_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 		$likes = $model->count();
 
 		return $likes ? $likes : 0;
@@ -179,20 +183,22 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public function getMentions($count=false, $publish=1)
 	{
-		if($count == false)
-			return $this->hasMany(NewsfeedMention::className(), ['newsfeed_id' => 'id'])
-			->alias('mentions')
-			->andOnCondition([sprintf('%s.publish', 'mentions') => $publish]);
+        if ($count == false) {
+            return $this->hasMany(NewsfeedMention::className(), ['newsfeed_id' => 'id'])
+                ->alias('mentions')
+                ->andOnCondition([sprintf('%s.publish', 'mentions') => $publish]);
+        }
 
 		$model = NewsfeedMention::find()
-			->alias('t')
-			->where(['newsfeed_id' => $this->id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['newsfeed_id' => $this->id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 		$mentions = $model->count();
 
 		return $mentions ? $mentions : 0;
@@ -203,12 +209,13 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public function getSpecifics($count=false)
 	{
-		if($count == false)
-			return $this->hasMany(NewsfeedSpecific::className(), ['newsfeed_id' => 'id']);
+        if ($count == false) {
+            return $this->hasMany(NewsfeedSpecific::className(), ['newsfeed_id' => 'id']);
+        }
 
 		$model = NewsfeedSpecific::find()
-			->alias('t')
-			->where(['newsfeed_id' => $this->id]);
+            ->alias('t')
+            ->where(['newsfeed_id' => $this->id]);
 		$specifics = $model->count();
 
 		return $specifics ? $specifics : 0;
@@ -270,11 +277,13 @@ class Newsfeeds extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -425,8 +434,9 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['privacy'] = [
 			'attribute' => 'privacy',
 			'value' => function($model, $key, $index, $column) {
-				if(!$model->privacy)
-					return '-';
+                if (!$model->privacy) {
+                    return '-';
+                }
 				return $model::getPrivacy($model->privacy);
 			},
 			'filter' => self::getPrivacy(),
@@ -450,19 +460,20 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -480,10 +491,11 @@ class Newsfeeds extends \app\components\ActiveRecord
 			7 => Yii::t('app', 'Custom'),
 		);
 
-		if($value !== null)
-			return $items[$value];
-		else
-			return $items;
+        if ($value !== null) {
+            return $items[$value];
+        } else {
+            return $items;
+        }
 	}
 
     /**
@@ -498,10 +510,11 @@ class Newsfeeds extends \app\components\ActiveRecord
             'vacancy' => Yii::t('app', 'Vacancy'),
         );
 
-        if($value !== null)
+        if ($value !== null) {
             return $items[$value];
-        else
+        }  else {
             return $items;
+        }
     }
 
     /**
@@ -562,23 +575,27 @@ class Newsfeeds extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
+        if (parent::beforeValidate()) {
 			$this->setMentions();
-			if($this->isNewRecord) {
-				if($this->user_id == null)
-					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+            if ($this->isNewRecord) {
+                if ($this->user_id == null) {
+                    $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
 
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
 
-				if($this->updated_id == null)
-					$this->updated_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+                if ($this->updated_id == null) {
+                    $this->updated_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 
         /**
@@ -586,7 +603,7 @@ class Newsfeeds extends \app\components\ActiveRecord
          */
         public function beforeSave($insert)
         {
-            if(parent::beforeSave($insert)) {
+            if (parent::beforeSave($insert)) {
                 // set and change mentions
             if ($insert && !is_array($this->newsfeed_param)) {
                 $this->newsfeed_param = [];
@@ -617,7 +634,7 @@ class Newsfeeds extends \app\components\ActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if($insert) {
+        if ($insert) {
             // set mentions
             if (!empty(($mentions = $this->mentions))) {
                 foreach ($mentions as $key => $val) {
@@ -656,7 +673,7 @@ class Newsfeeds extends \app\components\ActiveRecord
             }
 
             // drop difference mentions
-            if(!empty($oldMentions)) {
+            if (!empty($oldMentions)) {
                 foreach ($oldMentions as $key => $val) {
                     $data = NewsfeedMention::find()
                         ->select(['id'])

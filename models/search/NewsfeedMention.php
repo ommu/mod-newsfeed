@@ -60,20 +60,23 @@ class NewsfeedMention extends NewsfeedMentionModel
 	 */
 	public function search($params, $column=null)
 	{
-		if(!($column && is_array($column)))
-			$query = NewsfeedMentionModel::find()->alias('t');
-		else
-			$query = NewsfeedMentionModel::find()->alias('t')->select($column);
+        if (!($column && is_array($column))) {
+            $query = NewsfeedMentionModel::find()->alias('t');
+        } else {
+            $query = NewsfeedMentionModel::find()->alias('t')->select($column);
+        }
 		$query->joinWith([
 			'newsfeed newsfeed', 
 			// 'member member', 
 			// 'user user', 
 			// 'creation creation'
 		]);
-		if((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != ''))
-			$query = $query->joinWith(['member member', 'user user']);
-		if((isset($params['sort']) && in_array($params['sort'], ['creationDisplayname', '-creationDisplayname'])) || (isset($params['creationDisplayname']) && $params['creationDisplayname'] != ''))
-			$query = $query->joinWith(['creation creation']);
+        if ((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '')) {
+            $query = $query->joinWith(['member member', 'user user']);
+        }
+        if ((isset($params['sort']) && in_array($params['sort'], ['creationDisplayname', '-creationDisplayname'])) || (isset($params['creationDisplayname']) && $params['creationDisplayname'] != '')) {
+            $query = $query->joinWith(['creation creation']);
+        }
 
 		// $query = $query->groupBy(['newsfeed_id']);
 
@@ -82,8 +85,9 @@ class NewsfeedMention extends NewsfeedMentionModel
 			'query' => $query,
 		];
 		// disable pagination agar data pada api tampil semua
-		if(isset($params['pagination']) && $params['pagination'] == 0)
-			$dataParams['pagination'] = false;
+        if (isset($params['pagination']) && $params['pagination'] == 0) {
+            $dataParams['pagination'] = false;
+        }
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
@@ -100,11 +104,12 @@ class NewsfeedMention extends NewsfeedMentionModel
 			'defaultOrder' => ['newsfeed_id' => SORT_DESC],
 		]);
 
-		if(Yii::$app->request->get('newsfeed_id'))
-			unset($params['newsfeed_id']);
+        if (Yii::$app->request->get('newsfeed_id')) {
+            unset($params['newsfeed_id']);
+        }
 		$this->load($params);
 
-		if(!$this->validate()) {
+        if (!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -120,13 +125,14 @@ class NewsfeedMention extends NewsfeedMentionModel
 			'cast(t.updated_date as date)' => $this->updated_date,
 		]);
 
-		if(isset($params['trash']))
-			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
-		else {
-			if(!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == ''))
-				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
-			else
-				$query->andFilterWhere(['t.publish' => $this->publish]);
+        if (isset($params['trash'])) {
+            $query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
+        } else {
+            if (!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == '')) {
+                $query->andFilterWhere(['IN', 't.publish', [0,1]]);
+            } else {
+                $query->andFilterWhere(['t.publish' => $this->publish]);
+            }
 		}
 
         if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {

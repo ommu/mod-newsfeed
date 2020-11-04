@@ -17,7 +17,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if(!$small) {
+if (!$small) {
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Specifics'), 'url' => ['index']];
     $this->params['breadcrumbs'][] = $model->newsfeed->id;
 
@@ -34,8 +34,9 @@ $attributes = [
 		'attribute' => 'newsfeed_id',
 		'value' => function ($model) {
 			$newsfeed_id = isset($model->newsfeed) ? $model->newsfeed->id : '-';
-			if($newsfeed_id != '-')
-				return Html::a($newsfeed_id, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeed_id, 'class'=>'modal-btn']);
+            if ($newsfeed_id != '-') {
+                return Html::a($newsfeed_id, ['admin/view', 'id'=>$model->newsfeed_id], ['title'=>$newsfeed_id, 'class'=>'modal-btn']);
+            }
 			return $newsfeed_id;
 		},
 		'format' => 'html',

@@ -124,11 +124,13 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -191,19 +193,20 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['newsfeed_id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['newsfeed_id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -222,17 +225,19 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->user_id == null)
-					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->updated_id == null)
-					$this->updated_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-			$this->comment_ip = $_SERVER['REMOTE_ADDR'];
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->user_id == null) {
+                    $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->updated_id == null) {
+                    $this->updated_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+            $this->comment_ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return true;
 	}
 
     /**
@@ -246,7 +251,7 @@ class NewsfeedComment extends \app\components\ActiveRecord
             $this->newsfeed->updateCounters(['comments' => 1]);
 
         } else {
-            if(array_key_exists('publish', $changedAttributes) && $changedAttributes['publish'] != $this->publish && $this->publish == 2) {
+            if (array_key_exists('publish', $changedAttributes) && $changedAttributes['publish'] != $this->publish && $this->publish == 2) {
                 $this->newsfeed->updateCounters(['comments' => -1]);
             }
         }

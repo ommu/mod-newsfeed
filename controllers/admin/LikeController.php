@@ -41,7 +41,7 @@ class LikeController extends Controller
     {
         parent::init();
 
-        if(Yii::$app->request->get('id') || Yii::$app->request->get('newsfeed')) {
+        if (Yii::$app->request->get('id') || Yii::$app->request->get('newsfeed')) {
             $this->subMenu = $this->module->params['newsfeed_submenu'];
         }
     }
@@ -78,20 +78,21 @@ class LikeController extends Controller
 	 */
 	public function actionManage()
 	{
-		$searchModel = new NewsfeedLikeSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new NewsfeedLikeSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$gridColumn = Yii::$app->request->get('GridColumn', null);
-		$cols = [];
-		if($gridColumn != null && count($gridColumn) > 0) {
-			foreach($gridColumn as $key => $val) {
-				if($gridColumn[$key] == 1)
-					$cols[] = $key;
-			}
-		}
-		$columns = $searchModel->getGridColumn($cols);
+        $gridColumn = Yii::$app->request->get('GridColumn', null);
+        $cols = [];
+        if ($gridColumn != null && count($gridColumn) > 0) {
+            foreach ($gridColumn as $key => $val) {
+                if ($gridColumn[$key] == 1) {
+                    $cols[] = $key;
+                }
+            }
+        }
+        $columns = $searchModel->getGridColumn($cols);
 
-        if(($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
+        if (($newsfeed = Yii::$app->request->get('newsfeed')) != null) {
             $this->subMenuParam = $newsfeed;
             $newsfeed = \ommu\newsfeed\models\Newsfeeds::findOne($newsfeed);
         }
@@ -136,7 +137,7 @@ class LikeController extends Controller
 		$model = $this->findModel($id);
 		$model->publish = 2;
 
-		if($model->save(false, ['publish'])) {
+        if ($model->save(false, ['publish'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Newsfeed like success deleted.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -151,8 +152,9 @@ class LikeController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if(($model = NewsfeedLike::findOne($id)) !== null)
-			return $model;
+        if (($model = NewsfeedLike::findOne($id)) !== null) {
+            return $model;
+        }
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}
