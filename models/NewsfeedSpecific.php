@@ -114,7 +114,7 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['newsfeed_id'] = [
 			'attribute' => 'newsfeed_id',
@@ -137,7 +137,7 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 				return $this->filterYesNo($model->except);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',

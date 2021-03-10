@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
 		<?php echo $form->field($model, 'userDisplayname');?>
 
 		<?php echo $form->field($model, 'like_react')
-			->dropDownList($model->filterYesNo(), ['prompt'=>'']);?>
+			->dropDownList($model->filterYesNo(), ['prompt' => '']);?>
 
 		<?php echo $form->field($model, 'likes_date')
 			->input('date');?>

@@ -74,25 +74,25 @@ class Newsfeeds extends NewsfeedsModel
 			// 'updated updated'
 		]);
         if ((isset($params['sort']) && in_array($params['sort'], ['memberDisplayname', '-memberDisplayname'])) || (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '')) {
-            $query = $query->joinWith(['member member', 'user user']);
+            $query->joinWith(['member member', 'user user']);
         }
         if ((isset($params['sort']) && in_array($params['sort'], ['creationDisplayname', '-creationDisplayname'])) || (isset($params['creationDisplayname']) && $params['creationDisplayname'] != '')) {
-            $query = $query->joinWith(['creation creation']);
+            $query->joinWith(['creation creation']);
         }
         if ((isset($params['sort']) && in_array($params['sort'], ['modifiedDisplayname', '-modifiedDisplayname'])) || (isset($params['modifiedDisplayname']) && $params['modifiedDisplayname'] != '')) {
-            $query = $query->joinWith(['modified modified']);
+            $query->joinWith(['modified modified']);
         }
         if ((isset($params['sort']) && in_array($params['sort'], ['updatedDisplayname', '-updatedDisplayname'])) || (isset($params['updatedDisplayname']) && $params['updatedDisplayname'] != '')) {
-            $query = $query->joinWith(['updated updated']);
+            $query->joinWith(['updated updated']);
         }
 
-		$query = $query->groupBy(['id']);
+		$query->groupBy(['id']);
 
-		// add conditions that should always apply here
+        // add conditions that should always apply here
 		$dataParams = [
 			'query' => $query,
 		];
-		// disable pagination agar data pada api tampil semua
+        // disable pagination agar data pada api tampil semua
         if (isset($params['pagination']) && $params['pagination'] == 0) {
             $dataParams['pagination'] = false;
         }
@@ -126,10 +126,10 @@ class Newsfeeds extends NewsfeedsModel
 		$this->load($params);
 
         if (!$this->validate()) {
-			// uncomment the following line if you do not want to return any records when validation fails
-			// $query->where('0=1');
-			return $dataProvider;
-		}
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
 		// grid filtering conditions
 		$query->andFilterWhere([
@@ -155,7 +155,7 @@ class Newsfeeds extends NewsfeedsModel
             } else {
                 $query->andFilterWhere(['t.publish' => $this->publish]);
             }
-		}
+        }
 
         if (isset($params['memberDisplayname']) && $params['memberDisplayname'] != '') {
             $query->andWhere(['or', 

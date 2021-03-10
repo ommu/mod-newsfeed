@@ -21,7 +21,7 @@ use app\components\widgets\ActiveForm;
 <div class="newsfeeds-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -35,39 +35,39 @@ use app\components\widgets\ActiveForm;
 <?php //echo $form->errorSummary($model);?>
 
 <?php echo $form->field($model, 'app')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('app')); ?>
 
 <?php echo $form->field($model, 'member_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
+	->textInput(['type' => 'number', 'min' => '1'])
 	->label($model->getAttributeLabel('member_id')); ?>
 
 <?php echo $form->field($model, 'user_id')
-	->textInput(['type'=>'number', 'min'=>'1'])
+	->textInput(['type' => 'number', 'min' => '1'])
 	->label($model->getAttributeLabel('user_id')); ?>
 
 <?php echo $form->field($model, 'newsfeed_type')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('newsfeed_type')); ?>
 
 <?php echo $form->field($model, 'newsfeed_post')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('newsfeed_post')); ?>
 
 <?php /* echo $form->field($model, 'newsfeed_param')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('newsfeed_param')); */ ?>
 
 <?php echo $form->field($model, 'likes')
-	->textInput(['type'=>'number', 'min'=>'1'])
+	->textInput(['type' => 'number', 'min' => '1'])
 	->label($model->getAttributeLabel('likes')); ?>
 
 <?php echo $form->field($model, 'comments')
-	->textInput(['type'=>'number', 'min'=>'1'])
+	->textInput(['type' => 'number', 'min' => '1'])
 	->label($model->getAttributeLabel('comments')); ?>
 
 <?php echo $form->field($model, 'privacy')
-	->dropDownList($model::getPrivacy(), ['prompt'=>''])
+	->dropDownList($model::getPrivacy(), ['prompt' => ''])
 	->label($model->getAttributeLabel('privacy')); ?>
 
 <?php 

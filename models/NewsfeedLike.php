@@ -134,7 +134,7 @@ class NewsfeedLike extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['newsfeed_id'] = [
 			'attribute' => 'newsfeed_id',
@@ -157,7 +157,7 @@ class NewsfeedLike extends \app\components\ActiveRecord
 				return $this->filterYesNo($model->like_react);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['likes_date'] = [
 			'attribute' => 'likes_date',

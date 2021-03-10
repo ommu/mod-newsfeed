@@ -34,7 +34,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'value' => $model->quickAction(Url::to(['publish', 'id' => $model->primaryKey]), $model->publish),
 		'format' => 'raw',
 		'visible' => !$small,
 	],
@@ -86,7 +86,7 @@ $attributes = [
 	[
 		'attribute' => 'comments',
 		'value' => function ($model) {
-			return Html::a($model->comments, ['comment/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} comments', ['count'=>$comments])]);
+			return Html::a($model->comments, ['comment/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} comments', ['count' => $comments])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -94,7 +94,7 @@ $attributes = [
 	[
 		'attribute' => 'likes',
 		'value' => function ($model) {
-			return Html::a($model->likes, ['like/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} likes', ['count'=>$likes])]);
+			return Html::a($model->likes, ['like/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} likes', ['count' => $likes])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -103,7 +103,7 @@ $attributes = [
 		'attribute' => 'mentions',
 		'value' => function ($model) {
 			$mentions = $model->getMentions(true);
-			return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions])]);
+			return Html::a($mentions, ['mention/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} mentions', ['count' => $mentions])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -112,7 +112,7 @@ $attributes = [
 		'attribute' => 'specifics',
 		'value' => function ($model) {
 			$specifics = $model->getSpecifics(true);
-			return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics])]);
+			return Html::a($specifics, ['specific/manage', 'newsfeed' => $model->primaryKey], ['title' => Yii::t('app', '{count} specifics', ['count' => $specifics])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -149,7 +149,7 @@ $attributes = [
 	],
 	[
 		'attribute' => '',
-		'value' => Html::a(Yii::t('app', 'Update'), ['update', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Update'), 'class'=>'btn btn-success btn-sm']),
+		'value' => Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Update'), 'class' => 'btn btn-primary btn-sm']),
 		'format' => 'html',
 		'visible' => !$small && Yii::$app->request->isAjax ? true : false,
 	],
@@ -158,7 +158,7 @@ $attributes = [
 echo DetailView::widget([
 	'model' => $model,
 	'options' => [
-		'class'=>'table table-striped detail-view',
+		'class' => 'table table-striped detail-view',
 	],
 	'attributes' => $attributes,
 ]); ?>

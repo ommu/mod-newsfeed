@@ -72,19 +72,19 @@ class NewsfeedLike extends NewsfeedLikeModel
 			// 'updated updated'
 		]);
         if ((isset($params['sort']) && in_array($params['sort'], ['userDisplayname', '-userDisplayname'])) || (isset($params['userDisplayname']) && $params['userDisplayname'] != '')) {
-            $query = $query->joinWith(['user user']);
+            $query->joinWith(['user user']);
         }
         if ((isset($params['sort']) && in_array($params['sort'], ['updatedDisplayname', '-updatedDisplayname'])) || (isset($params['updatedDisplayname']) && $params['updatedDisplayname'] != '')) {
-            $query = $query->joinWith(['updated updated']);
+            $query->joinWith(['updated updated']);
         }
 
-		// $query = $query->groupBy(['newsfeed_id']);
+		// $query->groupBy(['newsfeed_id']);
 
-		// add conditions that should always apply here
+        // add conditions that should always apply here
 		$dataParams = [
 			'query' => $query,
 		];
-		// disable pagination agar data pada api tampil semua
+        // disable pagination agar data pada api tampil semua
         if (isset($params['pagination']) && $params['pagination'] == 0) {
             $dataParams['pagination'] = false;
         }
@@ -110,10 +110,10 @@ class NewsfeedLike extends NewsfeedLikeModel
 		$this->load($params);
 
         if (!$this->validate()) {
-			// uncomment the following line if you do not want to return any records when validation fails
-			// $query->where('0=1');
-			return $dataProvider;
-		}
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
 
 		// grid filtering conditions
 		$query->andFilterWhere([
@@ -133,7 +133,7 @@ class NewsfeedLike extends NewsfeedLikeModel
             } else {
                 $query->andFilterWhere(['t.publish' => $this->publish]);
             }
-		}
+        }
 
 		$query->andFilterWhere(['like', 't.likes_ip', $this->likes_ip])
 			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])

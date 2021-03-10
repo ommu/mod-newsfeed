@@ -288,7 +288,7 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['app'] = [
 			'attribute' => 'app',
@@ -317,7 +317,7 @@ class Newsfeeds extends \app\components\ActiveRecord
                 return $model::getType($newsfeedType);
 			},
             'filter' => self::getType(),
-            'contentOptions' => ['class'=>'text-center'],
+            'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['newsfeed_post'] = [
 			'attribute' => 'newsfeed_post',
@@ -395,40 +395,40 @@ class Newsfeeds extends \app\components\ActiveRecord
 			'attribute' => 'comments',
 			'value' => function($model, $key, $index, $column) {
 				$comments = $model->getComments(true);
-				return Html::a($comments, ['comment/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} comments', ['count'=>$comments]), 'data-pjax'=>0]);
+				return Html::a($comments, ['comment/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} comments', ['count' => $comments]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['likes'] = [
 			'attribute' => 'likes',
 			'value' => function($model, $key, $index, $column) {
 				$likes = $model->getLikes(true);
-				return Html::a($likes, ['like/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} likes', ['count'=>$likes]), 'data-pjax'=>0]);
+				return Html::a($likes, ['like/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} likes', ['count' => $likes]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['mentions'] = [
 			'attribute' => 'mentions',
 			'value' => function($model, $key, $index, $column) {
 				$mentions = $model->getMentions(true);
-				return Html::a($mentions, ['mention/manage', 'newsfeed'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} mentions', ['count'=>$mentions]), 'data-pjax'=>0]);
+				return Html::a($mentions, ['mention/manage', 'newsfeed' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} mentions', ['count' => $mentions]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['specifics'] = [
 			'attribute' => 'specifics',
 			'value' => function($model, $key, $index, $column) {
 				$specifics = $model->getSpecifics(true);
-				return Html::a($specifics, ['specific/manage', 'newsfeed'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} specifics', ['count'=>$specifics]), 'data-pjax'=>0]);
+				return Html::a($specifics, ['specific/manage', 'newsfeed' => $model->primaryKey], ['title' => Yii::t('app', '{count} specifics', ['count' => $specifics]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['privacy'] = [
@@ -440,16 +440,16 @@ class Newsfeeds extends \app\components\ActiveRecord
 				return $model::getPrivacy($model->privacy);
 			},
 			'filter' => self::getPrivacy(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -677,7 +677,7 @@ class Newsfeeds extends \app\components\ActiveRecord
                 foreach ($oldMentions as $key => $val) {
                     $data = NewsfeedMention::find()
                         ->select(['id'])
-                        ->where(['newsfeed_id'=>$this->id, 'member_id'=>$val['member_id']])
+                        ->where(['newsfeed_id' => $this->id, 'member_id' => $val['member_id']])
                         ->one();
                     if ($data) {
                         $data->delete();
