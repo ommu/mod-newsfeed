@@ -35,6 +35,7 @@
  * @property NewsfeedLike[] $likes
  * @property NewsfeedMention[] $mentions
  * @property NewsfeedSpecific[] $specifics
+ * @property NewsfeedTag[] $tags
  * @property Members $member
  * @property Users $user
  * @property Users $creation
@@ -219,6 +220,23 @@ class Newsfeeds extends \app\components\ActiveRecord
 		$specifics = $model->count();
 
 		return $specifics ? $specifics : 0;
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getTags($count=false)
+	{
+        if ($count == false) {
+            return $this->hasMany(NewsfeedTag::className(), ['newsfeed_id' => 'id']);
+        }
+
+		$model = NewsfeedTag::find()
+            ->alias('t')
+            ->where(['newsfeed_id' => $this->id]);
+		$tags = $model->count();
+
+		return $tags ? $tags : 0;
 	}
 
 	/**
