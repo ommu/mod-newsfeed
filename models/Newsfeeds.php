@@ -53,6 +53,7 @@ use yii\helpers\Json;
 use app\models\Users;
 use ommu\member\models\Members;
 use yii\helpers\ArrayHelper;
+use thamtech\uuid\helpers\UuidHelper;
 
 class Newsfeeds extends \app\components\ActiveRecord
 {
@@ -594,8 +595,9 @@ class Newsfeeds extends \app\components\ActiveRecord
 	public function beforeValidate()
 	{
         if (parent::beforeValidate()) {
-			$this->setMentions();
             if ($this->isNewRecord) {
+                $this->id = UuidHelper::uuid();
+    
                 if ($this->user_id == null) {
                     $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }
@@ -612,6 +614,8 @@ class Newsfeeds extends \app\components\ActiveRecord
                     $this->updated_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }
             }
+
+			$this->setMentions();
         }
         return true;
 	}

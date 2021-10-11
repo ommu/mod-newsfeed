@@ -32,6 +32,7 @@ namespace ommu\newsfeed\models;
 use Yii;
 use yii\helpers\Url;
 use app\models\Users;
+use thamtech\uuid\helpers\UuidHelper;
 
 class NewsfeedComment extends \app\components\ActiveRecord
 {
@@ -57,8 +58,8 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
 		return [
 			[['newsfeed_id', 'comment'], 'required'],
-			[['newsfeed_id', 'publish', 'user_id', 'updated_id'], 'integer'],
-			[['comment'], 'string'],
+			[['publish', 'user_id', 'updated_id'], 'integer'],
+			[['newsfeed_id', 'comment'], 'string'],
 			[['user_id'], 'safe'],
 			[['comment_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
@@ -227,6 +228,8 @@ class NewsfeedComment extends \app\components\ActiveRecord
 	{
         if (parent::beforeValidate()) {
             if ($this->isNewRecord) {
+                $this->id = UuidHelper::uuid();
+
                 if ($this->user_id == null) {
                     $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }

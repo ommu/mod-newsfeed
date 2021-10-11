@@ -26,6 +26,7 @@ namespace ommu\newsfeed\models;
 
 use Yii;
 use app\models\Users;
+use thamtech\uuid\helpers\UuidHelper;
 
 class NewsfeedSpecific extends \app\components\ActiveRecord
 {
@@ -50,7 +51,8 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	{
 		return [
 			[['newsfeed_id'], 'required'],
-			[['newsfeed_id', 'user_id', 'except'], 'integer'],
+			[['user_id', 'except'], 'integer'],
+			[['newsfeed_id'], 'string'],
 			[['user_id'], 'safe'],
 			[['newsfeed_id', 'user_id'], 'unique', 'targetAttribute' => ['newsfeed_id', 'user_id']],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
@@ -186,6 +188,8 @@ class NewsfeedSpecific extends \app\components\ActiveRecord
 	{
         if (parent::beforeValidate()) {
             if ($this->isNewRecord) {
+                $this->id = UuidHelper::uuid();
+    
                 if ($this->user_id == null) {
                     $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }

@@ -32,6 +32,7 @@ namespace ommu\newsfeed\models;
 use Yii;
 use yii\helpers\Url;
 use app\models\Users;
+use thamtech\uuid\helpers\UuidHelper;
 
 class NewsfeedLike extends \app\components\ActiveRecord
 {
@@ -57,7 +58,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	{
 		return [
 			[['newsfeed_id', 'likes_ip'], 'required'],
-			[['newsfeed_id', 'publish', 'user_id', 'like_react', 'updated_id'], 'integer'],
+			[['publish', 'user_id', 'like_react', 'updated_id'], 'integer'],
+			[['newsfeed_id'], 'string'],
 			[['user_id'], 'safe'],
 			[['likes_ip'], 'string', 'max' => 20],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
@@ -249,6 +251,8 @@ class NewsfeedLike extends \app\components\ActiveRecord
 	{
         if (parent::beforeValidate()) {
             if ($this->isNewRecord) {
+                $this->id = UuidHelper::uuid();
+
                 if ($this->user_id == null) {
                     $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }

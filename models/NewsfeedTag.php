@@ -1,29 +1,26 @@
 <?php
 /**
- * NewsfeedMention
+ * NewsfeedTag
  * 
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
- * @created date 5 January 2020, 23:14 WIB
- * @modified date 19 March 2020, 14:23 WIB
+ * @created date 13 July 2020, 07:12 WIB
  * @link https://github.com/ommu/mod-newsfeed
  *
- * This is the model class for table "ommu_newsfeed_mention".
+ * This is the model class for table "ommu_newsfeed_tag".
  *
- * The followings are the available columns in table "ommu_newsfeed_mention":
+ * The followings are the available columns in table "ommu_newsfeed_tag":
+ * @property integer $id
  * @property integer $newsfeed_id
  * @property integer $publish
- * @property integer $member_id
- * @property integer $user_id
+ * @property integer $tag_id
  * @property string $creation_date
  * @property integer $creation_id
- * @property string $updated_date
  *
  * The followings are the available model relations:
  * @property Newsfeeds $newsfeed
- * @property Members $member
- * @property Users $user
+ * @property CoreTags $tag
  * @property Users $creation
  *
  */
@@ -32,17 +29,19 @@ namespace ommu\newsfeed\models;
 
 use Yii;
 use yii\helpers\Url;
+use yii\helpers\Inflector;
+use app\models\CoreTags;
 use app\models\Users;
-use ommu\member\models\Members;
 use thamtech\uuid\helpers\UuidHelper;
 
-class NewsfeedMention extends \app\components\ActiveRecord
+class NewsfeedTag extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['creationDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = [];
 
-	public $memberDisplayname;
+	public $tagBody;
+	public $newsfeedId;
 	public $creationDisplayname;
 
 	/**
@@ -50,7 +49,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'ommu_newsfeed_mention';
+		return 'ommu_newsfeed_tag';
 	}
 
 	/**
@@ -59,10 +58,10 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['newsfeed_id'], 'required'],
-			[['publish', 'member_id', 'user_id', 'creation_id'], 'integer'],
-			[['newsfeed_id'], 'string'],
-			[['member_id', 'user_id'], 'safe'],
+			[['newsfeed_id', 'publish', 'tagBody'], 'required'],
+			[['publish', 'tag_id', 'creation_id'], 'integer'],
+			[['newsfeed_id', 'tagBody'], 'string'],
+			[['creation_date'], 'safe'],
 			[['newsfeed_id'], 'exist', 'skipOnError' => true, 'targetClass' => Newsfeeds::className(), 'targetAttribute' => ['newsfeed_id' => 'id']],
 		];
 	}
@@ -73,14 +72,14 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
+			'id' => Yii::t('app', 'ID'),
 			'newsfeed_id' => Yii::t('app', 'Newsfeed'),
 			'publish' => Yii::t('app', 'Publish'),
-			'member_id' => Yii::t('app', 'Member'),
-			'user_id' => Yii::t('app', 'User'),
+			'tag_id' => Yii::t('app', 'Tag'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
-			'updated_date' => Yii::t('app', 'Updated Date'),
-			'memberDisplayname' => Yii::t('app', 'Member'),
+			'tagBody' => Yii::t('app', 'Tag'),
+			'newsfeedId' => Yii::t('app', 'Newsfeed'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 		];
 	}
@@ -96,17 +95,9 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getMember()
+	public function getTag()
 	{
-		return $this->hasOne(Members::className(), ['member_id' => 'member_id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getUser()
-	{
-		return $this->hasOne(Users::className(), ['user_id' => 'user_id']);
+		return $this->hasOne(CoreTags::className(), ['tag_id' => 'tag_id']);
 	}
 
 	/**
@@ -119,11 +110,11 @@ class NewsfeedMention extends \app\components\ActiveRecord
 
 	/**
 	 * {@inheritdoc}
-	 * @return \ommu\newsfeed\models\query\NewsfeedMention the active query used by this AR class.
+	 * @return \ommu\newsfeed\models\query\NewsfeedTag the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		return new \ommu\newsfeed\models\query\NewsfeedMention(get_called_class());
+		return new \ommu\newsfeed\models\query\NewsfeedTag(get_called_class());
 	}
 
 	/**
@@ -146,26 +137,21 @@ class NewsfeedMention extends \app\components\ActiveRecord
 			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class' => 'text-center'],
 		];
-		$this->templateColumns['newsfeed_id'] = [
-			'attribute' => 'newsfeed_id',
+		$this->templateColumns['newsfeedId'] = [
+			'attribute' => 'newsfeedId',
 			'value' => function($model, $key, $index, $column) {
-				return $model->newsfeed_id;
+				return isset($model->newsfeed) ? $model->newsfeed->id : '-';
+				// return $model->newsfeedId;
 			},
 			'visible' => !Yii::$app->request->get('newsfeed') ? true : false,
 		];
-		$this->templateColumns['memberDisplayname'] = [
-			'attribute' => 'memberDisplayname',
+		$this->templateColumns['tagBody'] = [
+			'attribute' => 'tagBody',
 			'value' => function($model, $key, $index, $column) {
-                $memberDisplayname = isset($model->member) ? $model->member->displayname : '-';
-                $userDisplayname = isset($model->user) ? $model->user->displayname : '-';
-                if ($userDisplayname != '-' && $memberDisplayname != $userDisplayname) {
-                    return $memberDisplayname.'<br/>'.$userDisplayname;
-                }
-                return $memberDisplayname;
-				// return $model->memberDisplayname;
+				return isset($model->tag) ? $model->tag->body : '-';
+				// return $model->tagBody;
 			},
-            'format' => 'html',
-			'visible' => !Yii::$app->request->get('member') ? true : false,
+			'visible' => !Yii::$app->request->get('tag') ? true : false,
 		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
@@ -181,13 +167,6 @@ class NewsfeedMention extends \app\components\ActiveRecord
 				// return $model->creationDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('creation') ? true : false,
-		];
-		$this->templateColumns['updated_date'] = [
-			'attribute' => 'updated_date',
-			'value' => function($model, $key, $index, $column) {
-				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
-			},
-			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
@@ -214,7 +193,7 @@ class NewsfeedMention extends \app\components\ActiveRecord
             } else {
                 $model->select([$column]);
             }
-            $model = $model->where(['newsfeed_id' => $id])->one();
+            $model = $model->where(['id' => $id])->one();
             return is_array($column) ? $model : $model->$column;
 
         } else {
@@ -230,7 +209,8 @@ class NewsfeedMention extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		// $this->memberDisplayname = isset($this->member) ? $this->member->displayname : '-';
+		$this->tagBody = isset($this->tag) ? $this->tag->body : '';
+		// $this->newsfeedId = isset($this->newsfeed) ? $this->newsfeed->id : '-';
 		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 	}
 
@@ -242,12 +222,83 @@ class NewsfeedMention extends \app\components\ActiveRecord
         if (parent::beforeValidate()) {
             if ($this->isNewRecord) {
                 $this->id = UuidHelper::uuid();
-
+    
                 if ($this->creation_id == null) {
                     $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
                 }
             }
         }
         return true;
+	}
+
+	/**
+	 * after validate attributes
+	 */
+	public function afterValidate()
+	{
+		parent::afterValidate();
+
+		// Create action
+		
+		return true;
+	}
+
+	/**
+	 * before save attributes
+	 */
+	public function beforeSave($insert)
+	{
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                if ($this->tag_id == 0) {
+					$tag = CoreTags::find()
+						->select(['tag_id'])
+						->andWhere(['body' => Inflector::camelize($this->tagBody)])
+						->one();
+						
+                    if ($tag != null) {
+                        $this->tag_id = $tag->tag_id;
+                    } else {
+						$data = new CoreTags();
+						$data->body = $this->tagBody;
+                        if ($data->save()) {
+                            $this->tag_id = $data->tag_id;
+                        }
+					}
+				}
+            }
+        }
+        return true;
+	}
+
+	/**
+	 * After save attributes
+	 */
+	public function afterSave($insert, $changedAttributes)
+	{
+        parent::afterSave($insert, $changedAttributes);
+
+		// Create action
+	}
+
+	/**
+	 * Before delete attributes
+	 */
+	public function beforeDelete()
+	{
+        if (parent::beforeDelete()) {
+			// Create action
+        }
+        return true;
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	public function afterDelete()
+	{
+        parent::afterDelete();
+
+		// Create action
 	}
 }
