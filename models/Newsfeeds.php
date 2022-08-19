@@ -136,7 +136,8 @@ class Newsfeeds extends \app\components\ActiveRecord
         if ($count == false) {
             return $this->hasMany(NewsfeedComment::className(), ['newsfeed_id' => 'id'])
                 ->alias('comments')
-                ->andOnCondition([sprintf('%s.publish', 'comments') => $publish]);
+                ->andOnCondition([sprintf('%s.publish', 'comments') => $publish])
+                ->orderBy('creation_date DESC');;
         }
 
 		$model = NewsfeedComment::find()
