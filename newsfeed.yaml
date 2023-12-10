@@ -1,6 +1,6 @@
 newsfeed_submenu:
   view:
-    label: Info
+    label: Detail
     url:
       0: 'admin/post/view'
       id: $_GET*id
