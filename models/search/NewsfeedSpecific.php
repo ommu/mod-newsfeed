@@ -5,7 +5,7 @@
  * NewsfeedSpecific represents the model behind the search form about `ommu\newsfeed\models\NewsfeedSpecific`.
  *
  * @author Putra Sudaryanto <putra@ommu.id>
- * @contact (+62)856-299-4114
+ * @contact (+62)811-2540-432
  * @copyright Copyright (c) 2020 OMMU (www.ommu.id)
  * @created date 6 January 2020, 13:10 WIB
  * @link https://github.com/ommu/mod-newsfeed
