@@ -10,7 +10,7 @@
  * @modified date 30 August 2018, 04:51 WIB
  * @modified by Harias Martyno <hariyazt16@gmail.com>
  * @contact (+62)857-9999-6631
- * @link http://opensource.ommu.co
+ * @link https://github.com/ommu/mod-newsfeed
  *
  */
 
